@@ -52,7 +52,7 @@ endif()
 
 add_library(ippl_nbody_sync STATIC ${_NBODY_SYNC_SOURCES})
 target_include_directories(ippl_nbody_sync PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src>
+  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/ippl>)
 target_compile_features(ippl_nbody_sync PUBLIC cxx_std_20)
 target_link_libraries(ippl_nbody_sync PUBLIC ${_NBODY_SYNC_BACKEND})
@@ -89,7 +89,7 @@ endif()
 add_library(ippl_nbody STATIC ${_NBODY_COMMON_SOURCES} ${_NBODY_KERNEL_SOURCES})
 
 target_include_directories(ippl_nbody PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src>
+  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/ippl>)
 
 target_compile_features(ippl_nbody PUBLIC cxx_std_20)

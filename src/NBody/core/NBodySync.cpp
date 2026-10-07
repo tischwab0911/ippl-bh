@@ -51,6 +51,13 @@ IPPL_NBODY_INSTANTIATE_SYNC(FloatPrecision)
 
 #undef IPPL_NBODY_INSTANTIATE_SYNC
 
+// Payload-carrying sync (fields::AuxConserved). The 8-byte aux slots need an
+// 8-byte scratch buffer, so only the policies with Tc = double qualify.
+template void syncGravBH<DoublePrecision, fields::AuxConserved, fields::StdDependent>(
+    NBodyParticleContainer<DoublePrecision, 3>&);
+template void syncGravBH<MixedPrecision, fields::AuxConserved, fields::StdDependent>(
+    NBodyParticleContainer<MixedPrecision, 3>&);
+
 // Test-only combo (per-driver field-list selection): conserve only Px and ID, so
 // Py/Pz are NOT permuted. unit_tests/NBody names the same literal FieldList type.
 template void updateBH<DoublePrecision, util::FieldList<"Px", "ID">>(

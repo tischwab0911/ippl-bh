@@ -185,27 +185,37 @@ public:
     //   Core      : Rx Ry Rz h charge  (structural args of domain.sync(Grav))
     //   Conserved : Px Py Pz ID         (SFC-permuted; see fields::StdConserved)
     //   Dependent : Ex Ey Ez ugrav      (BH force output; see fields::StdDependent)
-    static constexpr std::array<std::string_view, 13> fieldNames{
+    //   Payload   : aux0 aux64          (application-defined per-particle data that a
+    //                                    driver carries through redistribution by listing
+    //                                    them as conserved; see fields::AuxConserved)
+    static constexpr std::array<std::string_view, 15> fieldNames{
         "Rx", "Ry", "Rz", "h", "charge",
         "Px", "Py", "Pz", "ID",
-        "Ex", "Ey", "Ez", "ugrav"};
+        "Ex", "Ey", "Ez", "ugrav",
+        "aux0", "aux64"};
 
     using DataTupleT = std::tuple<
         FieldVector<Tc>&, FieldVector<Tc>&, FieldVector<Tc>&,
         FieldVector<Th>&, FieldVector<Tm>&,
         FieldVector<Tc>&, FieldVector<Tc>&, FieldVector<Tc>&,
         FieldVector<IdType>&,
-        FieldVector<Ta>&, FieldVector<Ta>&, FieldVector<Ta>&, FieldVector<Ta>&>;
+        FieldVector<Ta>&, FieldVector<Ta>&, FieldVector<Ta>&, FieldVector<Ta>&,
+        FieldVector<double>&, FieldVector<std::uint64_t>&>;
     using DataTupleConstT = std::tuple<
         const FieldVector<Tc>&, const FieldVector<Tc>&, const FieldVector<Tc>&,
         const FieldVector<Th>&, const FieldVector<Tm>&,
         const FieldVector<Tc>&, const FieldVector<Tc>&, const FieldVector<Tc>&,
         const FieldVector<IdType>&,
         const FieldVector<Ta>&, const FieldVector<Ta>&, const FieldVector<Ta>&,
-        const FieldVector<Ta>&>;
+        const FieldVector<Ta>&,
+        const FieldVector<double>&, const FieldVector<std::uint64_t>&>;
 
-    DataTupleT      dataTuple()       { return std::tie(x, y, z, h, m, px, py, pz, id, ax, ay, az, ugrav); }
-    DataTupleConstT dataTuple() const { return std::tie(x, y, z, h, m, px, py, pz, id, ax, ay, az, ugrav); }
+    DataTupleT dataTuple() {
+        return std::tie(x, y, z, h, m, px, py, pz, id, ax, ay, az, ugrav, aux0, aux64);
+    }
+    DataTupleConstT dataTuple() const {
+        return std::tie(x, y, z, h, m, px, py, pz, id, ax, ay, az, ugrav, aux0, aux64);
+    }
 
     static_assert(std::tuple_size_v<DataTupleT> == fieldNames.size(),
                   "dataTuple() and fieldNames must list the same fields in order");
@@ -359,6 +369,12 @@ public:
     FieldVector<IdType> id;            // particle id (ID)         — conserved
     FieldVector<Ta>     ax, ay, az;    // accelerations (Ex, Ey, Ez)
     FieldVector<Ta>     ugrav;         // gravitational potential (unused output)
+    // Application payload, opaque to the BH stack. Only redistributed when a
+    // driver lists them in its ConservedFields (e.g. fields::AuxConserved);
+    // otherwise they are merely resized by create(). 8-byte types satisfy
+    // cstone's scratch-buffer element-size requirement (<= sizeof(Tc)).
+    FieldVector<double>        aux0;   // aux0  (e.g. per-particle time step)
+    FieldVector<std::uint64_t> aux64;  // aux64 (e.g. 64-bit application particle ID)
     Tc                  g{Tc(1)};      // gravitational/Coulomb prefactor
     Tc                  egrav{Tc(0)};  // total potential energy (unused output)
 

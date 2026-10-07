@@ -362,6 +362,75 @@ TEST(NBodyContainerInjectDestroy, ChunkedCreateProducesSameBHFieldEnergy) {
     EXPECT_DOUBLE_EQ(ea, eb) << "BH field energy must be insertion-grouping invariant";
 }
 
+// The application payload slots (aux0 double, aux64 uint64) must travel with
+// their particle through the SFC permutation when listed as conserved
+// (fields::AuxConserved), including across a destroy-all + re-create cycle,
+// which is how a driver re-injects an externally owned particle set.
+namespace {
+
+constexpr std::uint64_t kAuxKeyBase = 0x0123456700000000ULL;  // needs > 32 bits
+
+std::uint64_t auxKeyFor(IdType id) { return kAuxKeyBase + 3ULL * static_cast<std::uint64_t>(id); }
+double auxValueFor(std::uint64_t key) { return 1.0e-12 * static_cast<double>(key & 0xFFFFFULL) + 0.5; }
+
+void seedAux(C& pc, unsigned off, unsigned n) {
+    std::vector<double> a0(n);
+    std::vector<std::uint64_t> a64(n);
+    for (unsigned j = 0; j < n; ++j) {
+        a64[j] = auxKeyFor(static_cast<IdType>(off + j));
+        a0[j]  = auxValueFor(a64[j]);
+    }
+    uploadHost(a0, getRaw<"aux0">(pc) + off);
+    uploadHost(a64, getRaw<"aux64">(pc) + off);
+}
+
+// Every owned particle's payload must belong to it: decode the IPPL ID from
+// aux64 and compare positions/momenta/aux0 against the per-ID initial condition.
+void expectPayloadConsistent(C& pc, unsigned expectedN) {
+    ASSERT_EQ(pc.getLocalNum(), expectedN);
+    const auto rx  = ownedSlice(getRaw<"Rx">(pc), pc);
+    const auto px  = ownedSlice(getRaw<"Px">(pc), pc);
+    const auto a0  = ownedSlice(getRaw<"aux0">(pc), pc);
+    const auto a64 = ownedSlice(getRaw<"aux64">(pc), pc);
+    std::unordered_set<std::uint64_t> seen;
+    for (unsigned j = 0; j < a64.size(); ++j) {
+        ASSERT_GE(a64[j], kAuxKeyBase);
+        ASSERT_EQ((a64[j] - kAuxKeyBase) % 3ULL, 0ULL);
+        const auto id = static_cast<IdType>((a64[j] - kAuxKeyBase) / 3ULL);
+        const Ic c    = icFor(id);
+        EXPECT_EQ(rx[j], c.rx) << "slot " << j;
+        EXPECT_EQ(px[j], c.px) << "slot " << j;
+        EXPECT_EQ(a0[j], auxValueFor(a64[j])) << "slot " << j;
+        seen.insert(a64[j]);
+    }
+    EXPECT_EQ(seen.size(), expectedN) << "payload keys must stay unique";
+}
+
+}  // namespace
+
+TEST(NBodyContainerInjectDestroy, AuxPayloadFollowsParticlesThroughSync) {
+    constexpr unsigned kN = 4096;
+    C pc = makeContainer();
+    pc.setUniformH(1.0e-2);
+    pc.create(kN);
+    seedRange(pc, 0, kN);
+    seedAux(pc, 0, kN);
+    syncGravBH<DoublePrecision, fields::AuxConserved, fields::StdDependent>(pc);
+    expectPayloadConsistent(pc, kN);
+
+    // Re-inject the same set: destroy every owned particle, create kN fresh
+    // slots and seed them from the per-ID IC again, then sync.
+    const unsigned n = pc.getLocalNum();
+    Kokkos::View<bool*> mask("destroyAll", n);
+    Kokkos::deep_copy(mask, true);
+    pc.destroy(mask.data(), n);
+    const unsigned off = pc.create(kN);
+    seedRange(pc, off, kN);
+    seedAux(pc, off, kN);
+    syncGravBH<DoublePrecision, fields::AuxConserved, fields::StdDependent>(pc);
+    expectPayloadConsistent(pc, kN);
+}
+
 int main(int argc, char* argv[]) {
     ippl::initialize(argc, argv);
     int success = 1;

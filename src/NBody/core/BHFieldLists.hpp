@@ -34,4 +34,10 @@ namespace ippl::nbody::fields {
 using StdConserved = util::FieldList<"Px", "Py", "Pz", "ID">;
 using StdDependent = util::FieldList<"Ex", "Ey", "Ez", "ugrav">;
 
+// Momenta plus the application payload slots, used by drivers that hand the
+// owned particle set back to the application after a sync (e.g. OPAL-X space
+// charge carries its time step in aux0 and its int64 particle ID in aux64).
+// ID is omitted: such drivers identify particles through aux64.
+using AuxConserved = util::FieldList<"Px", "Py", "Pz", "aux0", "aux64">;
+
 }  // namespace ippl::nbody::fields

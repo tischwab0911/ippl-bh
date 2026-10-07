@@ -511,15 +511,18 @@ if(IPPL_ENABLE_NBODY)
     message(STATUS "NBody: CPU backend (IPPL_PLATFORMS=${IPPL_PLATFORMS})")
   endif()
 
+  set(IPPL_RYOANJI_GIT_REPOSITORY "https://github.com/tischwab0911/ryoanji.git"
+      CACHE STRING "Git repository of the ryoanji/cstone sources for the NBody module")
+  set(IPPL_RYOANJI_GIT_TAG "ippl" CACHE STRING "Branch, tag or commit of ryoanji")
   get_external_project(
     PROJECT_NAME
     "ryoanji"
     FOLDER_NAME
     "ryoanji"
     GIT_REPO
-    "http://github.com/biddisco/ryoanji"
+    "${IPPL_RYOANJI_GIT_REPOSITORY}"
     GIT_TAG
-    "ippl")
+    "${IPPL_RYOANJI_GIT_TAG}")
 endif()
 
 
