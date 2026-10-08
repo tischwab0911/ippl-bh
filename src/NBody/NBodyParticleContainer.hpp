@@ -32,6 +32,7 @@
 #include "cstone/primitives/primitives_acc.hpp"
 #include "cstone/sfc/box.hpp"
 #include "cstone/sfc/common.hpp"
+#include "cstone/sfc/sfc_gpu.h"
 #include "cstone/tree/csarray.hpp"
 #include "cstone/tree/definitions.h"
 #include "cstone/util/reallocate.hpp"
@@ -271,7 +272,10 @@ public:
 
         // New particles occupy [end, end+nLocal): valid (non-removeKey) keys so the
         // next sync includes them; unique IDs strided by rank (like ParticleBase).
-        cstone::fill<kHaveGpu>(keys.data() + end, keys.data() + end + nLocal, KeyType(0));
+        // Zero the whole suffix, not only the new slots: the shifted halos' key slots
+        // hold stale values and the grown tail is uninitialized memory. A stale removeKey
+        // there would be inherited by a particle that the next sync receives into it.
+        cstone::fill<kHaveGpu>(keys.data() + end, keys.data() + newSize, KeyType(0));
         detail::assignIds(id.data(), end, nLocal, nextId_m, nRanks_m);
         nextId_m += nRanks_m * static_cast<IdType>(nLocal);
 
@@ -383,6 +387,26 @@ private:
     friend void syncGravBH(NBodyParticleContainer<P_, 3>& pc);
     template <class P_, class CF>
     friend void updateBH(NBodyParticleContainer<P_, 3>& pc);
+
+    // After a sync cstone holds valid keys only for the assigned range; the halo slots
+    // keep their previous content, including removeKey markers set by destroy() (sorted
+    // there by the exchange). cstone's computeSfcKeys never overwrites a marker, so a
+    // particle received into such a slot by a later sync would inherit it: it is dropped
+    // from the local set, the assignment counts no longer match and the halo layout
+    // becomes inconsistent ("LET refine"). Reset the halo keys and recompute them from
+    // the halo positions (leaf-based h reads them).
+    void resetHaloKeys() {
+        const LocalIndex start = domain_.startIndex();
+        const LocalIndex end   = domain_.endIndex();
+        const LocalIndex n     = domain_.nParticlesWithHalos();
+        const auto&      bx    = domain_.box();
+        cstone::fill<kHaveGpu>(keys.data(), keys.data() + start, KeyType(0));
+        cstone::fill<kHaveGpu>(keys.data() + end, keys.data() + n, KeyType(0));
+        cstone::computeSfcKeys<kHaveGpu>(x.data(), y.data(), z.data(),
+                                         cstone::sfcKindPointer(keys.data()), start, bx);
+        cstone::computeSfcKeys<kHaveGpu>(x.data() + end, y.data() + end, z.data() + end,
+                                         cstone::sfcKindPointer(keys.data()) + end, n - end, bx);
+    }
 
     // Restore h after syncGravBH (which threads a dummy h=0 through cstone) for
     // ryoanji P2P softening, over [0, nWithHalos). Uniform fill of newly-grown

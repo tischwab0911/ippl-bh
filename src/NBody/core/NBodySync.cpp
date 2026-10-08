@@ -27,6 +27,7 @@ void syncGravBH(NBodyParticleContainer<P, 3>& pc) {
     const auto n = pc.domain_.nParticlesWithHalos();
     util::for_each_tuple([n](auto& a) { a.resize(n); }, cstone::get<DependentFields>(pc));
 
+    pc.resetHaloKeys();
     pc.refillHaloH();
 }
 
@@ -35,6 +36,7 @@ void updateBH(NBodyParticleContainer<P, 3>& pc) {
     pc.domain_.sync(pc.keys, pc.x, pc.y, pc.z, pc.h,
                     cstone::get<ConservedFields>(pc),
                     std::tie(pc.scratch0, pc.scratch1, pc.scratchTh, pc.scratchSfc));
+    pc.resetHaloKeys();
 }
 
 // Explicit instantiations. Every (Precision, ConservedFields, DependentFields)
