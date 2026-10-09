@@ -23,6 +23,13 @@
 
 namespace ippl::nbody {
 
+// Multipole expansion of the tree cells. Quadrupole (ryoanji::CartesianQuadrupole) has no
+// dipole term: exact when all sources share one sign (the dipole about the |q|-weighted
+// expansion center vanishes), but first-order wrong for cells that mix signs (e.g. image
+// charges). DipoleQuadrupole (ryoanji::CartesianMDQpole) adds the dipole; open boxes only,
+// ryoanji's Ewald summation exists for Quadrupole alone.
+enum class MultipoleOrder { Quadrupole, DipoleQuadrupole };
+
 // Barnes-Hut field solver: build local BH tree, P2M + M2M upsweep, traverse
 // to write Ex/Ey/Ez. When the container's box is fully periodic the canonical
 // Ewald correction (real-space erfc tail + reciprocal-space sum) is appended
@@ -45,6 +52,7 @@ public:
         float theta     = 0.5f;   // multipole-acceptance angle
         int   numShells = 1;      // BH near-field image-lattice extent (periodic only)
         ryoanji::EwaldSettings ewaldSettings;
+        MultipoleOrder multipoles = MultipoleOrder::Quadrupole;  // fixed per solver instance
     };
 
     NBodySolver(Container& pc, Params params);

@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <cmath>
 #include <cstdint>
+#include <cstdio>
 #include <cstdlib>
 #include <vector>
 
@@ -30,6 +31,7 @@
 #include "ryoanji/nbody/types.h"
 
 using ippl::nbody::DoublePrecision;
+using ippl::nbody::MultipoleOrder;
 using ippl::nbody::NBodySolver;
 using ippl::nbody::NBodyParticleContainer;
 using ippl::nbody::syncGravBH;
@@ -46,30 +48,30 @@ constexpr unsigned kBucketSize    = 64;
 constexpr unsigned kBucketSizeFoc = 64;
 constexpr float    kTheta         = 0.5f;
 
-} // namespace
-
-TEST(NBodySolver, MatchesDirectSumOpenBC) {
+/*! @brief Solve the given particles with BH and return the relative L2 error against
+ *         ryoanji::directSum (same P2P kernel) over all particles.
+ *
+ * @param bounds  initial container box (open BCs)
+ */
+double relativeErrorVsDirect(const std::vector<double>& xPre, const std::vector<double>& yPre,
+                             const std::vector<double>& zPre, const std::vector<double>& qPre,
+                             const std::array<double, 6>& bounds, MultipoleOrder order) {
     using T = double;
     using P = DoublePrecision;
     using cstone::BoundaryType;
 
+    const unsigned n = static_cast<unsigned>(xPre.size());
+
     NBodyParticleContainer<P, 3> pc(
         /*rank=*/0, /*nRanks=*/1,
         kBucketSize, kBucketSizeFoc, kTheta,
-        std::array<T, 6>{0.0, 1.0, 0.0, 1.0, 0.0, 1.0},
+        bounds,
         std::array<BoundaryType, 3>{
             BoundaryType::open, BoundaryType::open, BoundaryType::open});
 
-    pc.create(kN);
+    pc.create(n);
 
-    std::vector<T> xPre(kN), yPre(kN), zPre(kN), hPre(kN, 1.0e-2), qPre(kN, 1.0);
-    ::srand48(/*seed=*/424242);
-    for (unsigned i = 0; i < kN; ++i) {
-        xPre[i]  = drand48();
-        yPre[i]  = drand48();
-        zPre[i]  = drand48();
-    }
-
+    std::vector<T> hPre(n, 1.0e-2);
     uploadHost(xPre,  getRaw<"Rx">(pc));
     uploadHost(yPre,  getRaw<"Ry">(pc));
     uploadHost(zPre,  getRaw<"Rz">(pc));
@@ -77,8 +79,9 @@ TEST(NBodySolver, MatchesDirectSumOpenBC) {
     uploadHost(qPre,  getRaw<"charge">(pc));
 
     typename NBodySolver<P, 3>::Params params;
-    params.G         = T(1);
-    params.numShells = 0;
+    params.G          = T(1);
+    params.numShells  = 0;
+    params.multipoles = order;
 
     NBodySolver<P, 3> solver(pc, params);
     pc.setUniformH(0.01);
@@ -89,7 +92,7 @@ TEST(NBodySolver, MatchesDirectSumOpenBC) {
     const unsigned start      = pc.startIndex();
     const unsigned end        = pc.endIndex();
     const unsigned nWithHalos = pc.nWithHalos();
-    ASSERT_EQ(end - start, kN) << "Single-rank: every particle should be locally owned.";
+    EXPECT_EQ(end - start, n) << "Single-rank: every particle should be locally owned.";
 
     // Reference: direct N² on the post-sync (SFC-sorted) positions/charges/h.
     // directKernel does `+=` into these buffers (direct.cuh:78-83), so they must
@@ -135,14 +138,78 @@ TEST(NBodySolver, MatchesDirectSumOpenBC) {
         const long double rz = dirAz[j];
         sqRef += rx * rx + ry * ry + rz * rz;
     }
-    ASSERT_GT(sqRef, 0.0L) << "Direct sum produced zero-norm reference — invalid input.";
-    const long double relL2 = std::sqrt(sqErr / sqRef);
+    EXPECT_GT(sqRef, 0.0L) << "Direct sum produced zero-norm reference — invalid input.";
+    return static_cast<double>(std::sqrt(sqErr / sqRef));
+}
 
-    // theta=0.5 with Cartesian quadrupole multipoles: typical mean-relative L2 is
-    // around 1e-3 to 1e-2 on uniform random distributions. Lock at 1e-2.
-    EXPECT_LT(relL2, 1e-2L)
-        << "BH-vs-direct relative L2 error " << static_cast<double>(relL2)
-        << " exceeds 1e-2 for theta=" << kTheta;
+} // namespace
+
+TEST(NBodySolver, MatchesDirectSumOpenBC) {
+    std::vector<double> xPre(kN), yPre(kN), zPre(kN), qPre(kN, 1.0);
+    ::srand48(/*seed=*/424242);
+    for (unsigned i = 0; i < kN; ++i) {
+        xPre[i]  = drand48();
+        yPre[i]  = drand48();
+        zPre[i]  = drand48();
+    }
+
+    const std::array<double, 6> bounds{0.0, 1.0, 0.0, 1.0, 0.0, 1.0};
+    for (MultipoleOrder order : {MultipoleOrder::Quadrupole, MultipoleOrder::DipoleQuadrupole}) {
+        const double relL2 = relativeErrorVsDirect(xPre, yPre, zPre, qPre, bounds, order);
+        std::printf("[NBodySolver] same-sign %s relative L2 error = %.3e\n",
+                    order == MultipoleOrder::Quadrupole ? "Quadrupole" : "DipoleQuadrupole", relL2);
+
+        // theta=0.5, uniform random: measured 5.18e-4 for both orders (same-sign cells have
+        // no dipole about the |q|-weighted center). Limit ~2.5x.
+        EXPECT_LT(relL2, 1.3e-3)
+            << "BH-vs-direct relative L2 error " << relL2 << " exceeds 1.3e-3 for theta=" << kTheta;
+    }
+}
+
+// Image-charge geometry: +1 charges uniform in the unit cube and their mirrors (-1) across the
+// plane z = 0.2. Reals below the plane put mirrors into [0.2, 0.4], so cells there mix signs.
+// Without the dipole term those cells are first-order wrong; with it the error must drop to the
+// same-sign level.
+TEST(NBodySolver, MixedSignNeedsDipoles) {
+    constexpr unsigned kReal   = kN / 2;
+    constexpr double   kPlaneZ = 0.2;
+    std::vector<double> xPre(kN), yPre(kN), zPre(kN), qPre(kN);
+    ::srand48(/*seed=*/171717);
+    for (unsigned i = 0; i < kReal; ++i) {
+        xPre[i] = xPre[kReal + i] = drand48();
+        yPre[i] = yPre[kReal + i] = drand48();
+        zPre[i]          = drand48();
+        zPre[kReal + i]  = 2.0 * kPlaneZ - zPre[i];
+        qPre[i]          = 1.0;
+        qPre[kReal + i]  = -1.0;
+    }
+
+    const std::array<double, 6> bounds{0.0, 1.0, 0.0, 1.0, 2.0 * kPlaneZ - 1.0, 1.0};
+    const double errQ =
+        relativeErrorVsDirect(xPre, yPre, zPre, qPre, bounds, MultipoleOrder::Quadrupole);
+    const double errDQ =
+        relativeErrorVsDirect(xPre, yPre, zPre, qPre, bounds, MultipoleOrder::DipoleQuadrupole);
+    std::printf("[NBodySolver] mixed-sign relative L2 error: Quadrupole = %.3e, "
+                "DipoleQuadrupole = %.3e\n", errQ, errDQ);
+
+    // Measured (GH200, 1 rank): Quadrupole 1.27e-2, DipoleQuadrupole 3.14e-4, i.e. at the
+    // same-sign level (5.18e-4). Limits ~2.5x: DipoleQuadrupole must stay there, and the
+    // gap to Quadrupole (40x) proves the dipole term is used.
+    EXPECT_LT(errDQ, 8e-4);
+    EXPECT_GT(errQ, 10.0 * errDQ);
+}
+
+TEST(NBodySolver, DipolesRejectPeriodicBox) {
+    using P = DoublePrecision;
+    using cstone::BoundaryType;
+    NBodyParticleContainer<P, 3> pc(
+        /*rank=*/0, /*nRanks=*/1, kBucketSize, kBucketSizeFoc, kTheta,
+        std::array<double, 6>{0.0, 1.0, 0.0, 1.0, 0.0, 1.0},
+        std::array<BoundaryType, 3>{
+            BoundaryType::periodic, BoundaryType::periodic, BoundaryType::periodic});
+    typename NBodySolver<P, 3>::Params params;
+    params.multipoles = MultipoleOrder::DipoleQuadrupole;
+    EXPECT_THROW((NBodySolver<P, 3>(pc, params)), std::invalid_argument);
 }
 
 int main(int argc, char* argv[]) {

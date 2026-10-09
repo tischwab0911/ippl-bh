@@ -23,6 +23,7 @@
 #include <cstdio>
 #include <stdexcept>
 #include <string>
+#include <variant>
 
 #include <mpi.h>
 
@@ -39,22 +40,40 @@ namespace ippl::nbody {
 template <class P, unsigned Dim>
 class NBodySolver<P, Dim>::Impl {
 public:
-    using Container     = typename NBodySolver<P, Dim>::Container;
-    using Tmm           = typename P::Tmm;
-    using MultipoleType = ryoanji::CartesianQuadrupole<Tmm>;
-    using DomainT       = typename Container::DomainT;
-    using Holder        = MultipoleHolder<MultipoleType, DomainT, Container, NBodyAcc>;
+    using Container = typename NBodySolver<P, Dim>::Container;
+    using Tmm       = typename P::Tmm;
+    using DomainT   = typename Container::DomainT;
+    using HolderQ   = MultipoleHolder<ryoanji::CartesianQuadrupole<Tmm>, DomainT, Container, NBodyAcc>;
+    using HolderMDQ = MultipoleHolder<ryoanji::CartesianMDQpole<Tmm>, DomainT, Container, NBodyAcc>;
 
-    Impl(Container& pc, Params params) : pc_(pc), params_(params) {}
+    using Holders   = std::variant<HolderQ, HolderMDQ>;
+
+    Impl(Container& pc, Params params)
+        : pc_(pc), params_(params), mHolder_(makeHolder(params.multipoles)) {}
+
+    // Constructs the selected holder in place (guaranteed copy elision, no move needed).
+    static Holders makeHolder(MultipoleOrder order) {
+        if (order == MultipoleOrder::DipoleQuadrupole) {
+            return Holders(std::in_place_type<HolderMDQ>);
+        }
+        return Holders(std::in_place_type<HolderQ>);
+    }
 
     Container& pc_;
     Params     params_;
-    Holder     mHolder_;
+    Holders    mHolder_;
 };
 
 template <class P, unsigned Dim>
-NBodySolver<P, Dim>::NBodySolver(Container& pc, Params params)
-    : impl_(std::make_unique<Impl>(pc, params)) {}
+NBodySolver<P, Dim>::NBodySolver(Container& pc, Params params) {
+    if (params.multipoles == MultipoleOrder::DipoleQuadrupole
+        && pc.domain().box().boundaryX() == cstone::BoundaryType::periodic) {
+        throw std::invalid_argument(
+            "NBodySolver: dipole multipoles do not support periodic boxes (ryoanji's Ewald "
+            "summation exists for quadrupole multipoles only).");
+    }
+    impl_ = std::make_unique<Impl>(pc, params);
+}
 
 template <class P, unsigned Dim>
 NBodySolver<P, Dim>::~NBodySolver() = default;
@@ -91,7 +110,6 @@ void NBodySolver<P, Dim>::runSolver(bool warmup) {
     pc.g                            = params.G;
     auto ewald                      = params.ewaldSettings;
     ewald.numReplicaShells          = params.numShells;
-    s.mHolder_.setEwaldSettings(ewald);
 
     {
         GpuTimer t(tZeroE, collect);
@@ -100,16 +118,22 @@ void NBodySolver<P, Dim>::runSolver(bool warmup) {
         cstone::fill<kHaveGpu>(pc.az.data() + start, pc.az.data() + end, Ta(0));
     }
 
-    cstone::GroupView grp;
-    { GpuTimer t(tGroups, collect); grp = s.mHolder_.computeSpatialGroups(pc, domain); }
-    { GpuTimer t(tUpswp,  collect); s.mHolder_.upsweep(pc, domain); }
-    { GpuTimer t(tBH,     collect); s.mHolder_.traverse(grp, pc, domain); }
+    // Same sequence for either multipole type (params.multipoles picked the holder).
+    auto stats = std::visit(
+        [&](auto& holder) {
+            holder.setEwaldSettings(ewald);
+            cstone::GroupView grp;
+            { GpuTimer t(tGroups, collect); grp = holder.computeSpatialGroups(pc, domain); }
+            { GpuTimer t(tUpswp,  collect); holder.upsweep(pc, domain); }
+            { GpuTimer t(tBH,     collect); holder.traverse(grp, pc, domain); }
+            return holder.readStats();
+        },
+        s.mHolder_);
 
     // sphexa gravity_wrapper guard: ryoanji signals traversal-stack exhaustion by
     // setting maxP2P = 0xFFFFFFFF. Without this check the kernel returns with
     // corrupt index data and the next syncGrav deadlocks on bad SFC keys. The CPU
     // holder returns zeroed stats, so this is a no-op there.
-    auto stats = s.mHolder_.readStats();
     if (stats[1] == 0xFFFFFFFFull) {
         int mpiRank = -1;
         MPI_Comm_rank(pc.comm(), &mpiRank);

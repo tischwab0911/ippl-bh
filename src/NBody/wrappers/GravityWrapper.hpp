@@ -28,6 +28,7 @@
 // selects between them with std::conditional_t<HaveGpu<Acc>, Gpu, Cpu>, exactly
 // like NbodyProp does upstream.
 
+#include <stdexcept>
 #include <type_traits>
 #include <vector>
 
@@ -39,6 +40,19 @@
 #include "ryoanji/nbody/traversal_cpu.hpp"
 
 namespace ippl::nbody {
+
+// ryoanji's Ewald summation exists for CartesianQuadrupole only: the GPU kernels are not
+// instantiated for other types (link error) and the header-only CPU version would silently
+// ignore a dipole. Both multipole types are util::array<T, N> aliases, so is_same works.
+template <class MType>
+inline constexpr bool kHasEwald =
+    std::is_same_v<MType, ryoanji::CartesianQuadrupole<typename MType::value_type>>;
+
+[[noreturn]] inline void throwNoEwald() {
+    throw std::runtime_error(
+        "Barnes-Hut: periodic boxes need Ewald summation, which exists only for quadrupole "
+        "multipoles (MultipoleOrder::Quadrupole).");
+}
 
 template <class MType, class DomainType, class DataType>
 class MultipoleHolderCpu {
@@ -81,12 +95,17 @@ public:
                                 domain.box(), d.g, d.ugrav.data(), d.ax.data(), d.ay.data(),
                                 d.az.data(), &d.egrav, numShells);
 
-        if (usePbc) {
-            ryoanji::computeGravityEwald(makeVec3(focusTree.expansionCentersAcc()[0]),
-                                         multipoles_.front(), domain.startIndex(),
-                                         domain.endIndex(), d.x.data(), d.y.data(), d.z.data(),
-                                         d.m.data(), box, d.g, d.ugrav.data(), d.ax.data(),
-                                         d.ay.data(), d.az.data(), &d.egrav, ewaldSettings_);
+        if constexpr (kHasEwald<MType>) {
+            if (usePbc) {
+                ryoanji::computeGravityEwald(makeVec3(focusTree.expansionCentersAcc()[0]),
+                                             multipoles_.front(), domain.startIndex(),
+                                             domain.endIndex(), d.x.data(), d.y.data(),
+                                             d.z.data(), d.m.data(), box, d.g, d.ugrav.data(),
+                                             d.ax.data(), d.ay.data(), d.az.data(), &d.egrav,
+                                             ewaldSettings_);
+            }
+        } else if (usePbc) {
+            throwNoEwald();
         }
     }
 
@@ -135,16 +154,20 @@ public:
                                    rawPtr(d.h), d.g, numShells, domain.box(), rawPtr(d.ugrav),
                                    rawPtr(d.ax), rawPtr(d.ay), rawPtr(d.az));
 
-        if (usePbc) {
-            ryoanji::Vec4<Tf> rootCenter;
-            memcpyD2H(domain.focusTree().expansionCentersAcc().data(), 1, &rootCenter);
-            MType rootM;
-            memcpyD2H(mHolder_.deviceMultipoles(), 1, &rootM);
+        if constexpr (kHasEwald<MType>) {
+            if (usePbc) {
+                ryoanji::Vec4<Tf> rootCenter;
+                memcpyD2H(domain.focusTree().expansionCentersAcc().data(), 1, &rootCenter);
+                MType rootM;
+                memcpyD2H(mHolder_.deviceMultipoles(), 1, &rootM);
 
-            computeGravityEwaldGpu(makeVec3(rootCenter), rootM, grp, rawPtr(d.x), rawPtr(d.y),
-                                   rawPtr(d.z), rawPtr(d.m), box, d.g, rawPtr(d.ugrav),
-                                   rawPtr(d.ax), rawPtr(d.ay), rawPtr(d.az), &d.egrav,
-                                   ewaldSettings_);
+                computeGravityEwaldGpu(makeVec3(rootCenter), rootM, grp, rawPtr(d.x), rawPtr(d.y),
+                                       rawPtr(d.z), rawPtr(d.m), box, d.g, rawPtr(d.ugrav),
+                                       rawPtr(d.ax), rawPtr(d.ay), rawPtr(d.az), &d.egrav,
+                                       ewaldSettings_);
+            }
+        } else if (usePbc) {
+            throwNoEwald();
         }
     }
 
