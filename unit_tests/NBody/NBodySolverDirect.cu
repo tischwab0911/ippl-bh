@@ -25,7 +25,7 @@
 // cstone/cuda/cuda_utils.cuh must precede direct.cuh — direct.cuh references
 // kernelSuccess() but does not include its declaration (upstream omission).
 // RyoanjiDirect.cu uses the same workaround. It also provides the portable
-// memcpy/syncGpu wrappers (CUDA or HIP).
+// memcpy wrappers (CUDA or HIP).
 #include "cstone/cuda/cuda_utils.cuh"
 #include "ryoanji/nbody/direct.cuh"
 #include "ryoanji/nbody/types.h"
@@ -34,6 +34,7 @@ using ippl::nbody::DoublePrecision;
 using ippl::nbody::MultipoleOrder;
 using ippl::nbody::NBodySolver;
 using ippl::nbody::NBodyParticleContainer;
+using ippl::nbody::syncExec;
 using ippl::nbody::syncGravBH;
 using ippl::nbody::test::downloadDevice;
 using ippl::nbody::test::uploadHost;
@@ -114,7 +115,7 @@ double relativeErrorVsDirect(const std::vector<double>& xPre, const std::vector<
         getRaw<"charge">(pc), getRaw<"h">(pc),
         refPx.data(), refAx.data(), refAy.data(), refAz.data());
 
-    syncGpu();
+    syncExec();
 
     std::vector<T> bhAx, bhAy, bhAz, dirAx, dirAy, dirAz;
     downloadDevice(getRaw<"Ex">(pc), nWithHalos, bhAx);
@@ -192,11 +193,13 @@ TEST(NBodySolver, MixedSignNeedsDipoles) {
     std::printf("[NBodySolver] mixed-sign relative L2 error: Quadrupole = %.3e, "
                 "DipoleQuadrupole = %.3e\n", errQ, errDQ);
 
-    // Measured (GH200, 1 rank): Quadrupole 1.27e-2, DipoleQuadrupole 3.14e-4, i.e. at the
-    // same-sign level (5.18e-4). Limits ~2.5x: DipoleQuadrupole must stay there, and the
-    // gap to Quadrupole (40x) proves the dipole term is used.
+    // Measured (GH200, 1 rank): Quadrupole 4.44e-3, DipoleQuadrupole 4.97e-4, i.e. at the
+    // same-sign level (5.18e-4). The box is 1 x 1 x 1.6, so cstone's mixed-dimension SFC keys
+    // give x and y one key bit less and the cells straddling the plane depend on that choice
+    // (before those keys: Quadrupole 1.27e-2, DipoleQuadrupole 3.14e-4). DipoleQuadrupole must
+    // stay at the same-sign level, and the gap to Quadrupole (9x) proves the dipole is used.
     EXPECT_LT(errDQ, 8e-4);
-    EXPECT_GT(errQ, 10.0 * errDQ);
+    EXPECT_GT(errQ, 5.0 * errDQ);
 }
 
 TEST(NBodySolver, DipolesRejectPeriodicBox) {

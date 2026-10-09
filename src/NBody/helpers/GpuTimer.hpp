@@ -15,8 +15,6 @@
  */
 #pragma once
 
-#include "cstone/cuda/cuda_utils.hpp"  // syncGpu (real on GPU builds, stub decl on CPU)
-
 #include "Utility/IpplTimings.h"
 
 #include "NBody/core/Accelerator.hpp"
@@ -24,8 +22,8 @@
 namespace ippl::nbody {
 
 // Times a scope including the trailing device synchronize. On GPU builds the
-// dtor blocks on syncGpu() so the elapsed time covers async kernel completion;
-// on the CPU build the syncGpu() call is compiled out (kernels are synchronous).
+// dtor blocks on syncExec() so the elapsed time covers async kernel completion;
+// on the CPU build syncExec() is a no-op (kernels are synchronous).
 // collect=false skips both start/stop, leaving the timer untouched.
 class GpuTimer {
 public:
@@ -34,7 +32,7 @@ public:
         if (collect_) { IpplTimings::startTimer(ref_); }
     }
     ~GpuTimer() {
-        if constexpr (kHaveGpu) { syncGpu(); }
+        syncExec();
         if (collect_) { IpplTimings::stopTimer(ref_); }
     }
     GpuTimer(const GpuTimer&)            = delete;

@@ -41,8 +41,9 @@ target_link_libraries(RyoanjiKernelCpu PRIVATE
   ippl::cstone_headers)
 
 # Backend-agnostic tests (.cpp): build on every backend. They exercise the
-# build's NBodyAcc (GpuTag on CUDA/HIP, CpuTag on CPU) through the same library
-# API, using the portable up/download helper in NBodyTestUtil.hpp. Each provides
+# build's NBodyAcc (execution::Gpu on CUDA/HIP, execution::Cpu on CPU) through
+# the same library API, using the portable up/download helper in
+# NBodyTestUtil.hpp. Each provides
 # its own main() (ippl::initialize wraps MPI + Kokkos; cstone's Domain calls MPI
 # collectives unconditionally), so no USE_GTEST_MAIN. RDC stays off: these TUs
 # include <Kokkos_Core.hpp> via NBodyParticleContainer.hpp, which trips desul's

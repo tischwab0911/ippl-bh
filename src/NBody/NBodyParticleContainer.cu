@@ -26,37 +26,38 @@ namespace detail {
 namespace {
 
 template <class KeyType, class Th>
-__global__ void setHFromLeafKernel(const KeyType* keys,
-                                   const KeyType* leaves,
-                                   int            nLeafKeys,
-                                   Th             cbrtVol,
-                                   Th*            h,
-                                   unsigned       n) {
+__global__ void setHFromLeafKernel(const KeyType*   keys,
+                                   const KeyType*   leaves,
+                                   int              nLeafKeys,
+                                   Th               cbrtVol,
+                                   cstone::AxesBits reductions,
+                                   Th*              h,
+                                   unsigned         n) {
     unsigned i = blockIdx.x * blockDim.x + threadIdx.x;
     if (i >= n) return;
     KeyType               k         = keys[i];
     cstone::TreeNodeIndex leafIdx   = cstone::findNodeBelow(leaves, nLeafKeys, k);
     KeyType               codeRange = leaves[leafIdx + 1] - leaves[leafIdx];
     unsigned              level     = cstone::treeLevel(codeRange);
-    h[i] = cbrtVol / Th(1u << level);
+    h[i] = cellEdge(cbrtVol, level, reductions);
 }
 
 }  // namespace
 
 template <class Th, class KeyType>
 void setHFromLeavesGpu(const KeyType* keys, const KeyType* leaves, int nLeafKeys,
-                       Th cbrtVol, Th* h, unsigned n) {
+                       Th cbrtVol, cstone::AxesBits reductions, Th* h, unsigned n) {
     if (n == 0) return;
     const unsigned blockSize = 256u;
     const unsigned numBlocks = (n + blockSize - 1u) / blockSize;
     setHFromLeafKernel<KeyType, Th>
-        <<<numBlocks, blockSize>>>(keys, leaves, nLeafKeys, cbrtVol, h, n);
+        <<<numBlocks, blockSize>>>(keys, leaves, nLeafKeys, cbrtVol, reductions, h, n);
 }
 
 template void setHFromLeavesGpu<double, std::uint64_t>(
-    const std::uint64_t*, const std::uint64_t*, int, double, double*, unsigned);
+    const std::uint64_t*, const std::uint64_t*, int, double, cstone::AxesBits, double*, unsigned);
 template void setHFromLeavesGpu<float, std::uint64_t>(
-    const std::uint64_t*, const std::uint64_t*, int, float, float*, unsigned);
+    const std::uint64_t*, const std::uint64_t*, int, float, cstone::AxesBits, float*, unsigned);
 
 namespace {
 

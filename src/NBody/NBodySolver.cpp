@@ -113,9 +113,9 @@ void NBodySolver<P, Dim>::runSolver(bool warmup) {
 
     {
         GpuTimer t(tZeroE, collect);
-        cstone::fill<kHaveGpu>(pc.ax.data() + start, pc.ax.data() + end, Ta(0));
-        cstone::fill<kHaveGpu>(pc.ay.data() + start, pc.ay.data() + end, Ta(0));
-        cstone::fill<kHaveGpu>(pc.az.data() + start, pc.az.data() + end, Ta(0));
+        cstone::fill(kExec, pc.ax.data() + start, pc.ax.data() + end, Ta(0));
+        cstone::fill(kExec, pc.ay.data() + start, pc.ay.data() + end, Ta(0));
+        cstone::fill(kExec, pc.az.data() + start, pc.az.data() + end, Ta(0));
     }
 
     // Same sequence for either multipole type (params.multipoles picked the holder).

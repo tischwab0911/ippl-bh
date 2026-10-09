@@ -284,11 +284,11 @@ protected:
         Tc* pxd = getRaw<"Px">(this->pc());
         Tc* pyd = getRaw<"Py">(this->pc());
         Tc* pzd = getRaw<"Pz">(this->pc());
-        cstone::fill<kHaveGpu>(qd, qd + localN, Tm(1));
-        cstone::fill<kHaveGpu>(hd, hd + localN, smoothH_m);
-        cstone::fill<kHaveGpu>(pxd, pxd + localN, Tc(0));
-        cstone::fill<kHaveGpu>(pyd, pyd + localN, Tc(0));
-        cstone::fill<kHaveGpu>(pzd, pzd + localN, Tc(0));
+        cstone::fill(kExec, qd, qd + localN, Tm(1));
+        cstone::fill(kExec, hd, hd + localN, smoothH_m);
+        cstone::fill(kExec, pxd, pxd + localN, Tc(0));
+        cstone::fill(kExec, pyd, pyd + localN, Tc(0));
+        cstone::fill(kExec, pzd, pzd + localN, Tc(0));
         this->pc().setUniformH(smoothH_m);
 
         hx_m.clear(); hx_m.shrink_to_fit();

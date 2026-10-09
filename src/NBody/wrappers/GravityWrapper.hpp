@@ -157,9 +157,11 @@ public:
         if constexpr (kHasEwald<MType>) {
             if (usePbc) {
                 ryoanji::Vec4<Tf> rootCenter;
-                memcpyD2H(domain.focusTree().expansionCentersAcc().data(), 1, &rootCenter);
+                cstone::memcpyD2HAsync(domain.exec(), domain.focusTree().expansionCentersAcc().data(), 1,
+                                       &rootCenter);
                 MType rootM;
-                memcpyD2H(mHolder_.deviceMultipoles(), 1, &rootM);
+                cstone::memcpyD2HAsync(domain.exec(), mHolder_.deviceMultipoles(), 1, &rootM);
+                cstone::syncGpu(domain.exec());
 
                 computeGravityEwaldGpu(makeVec3(rootCenter), rootM, grp, rawPtr(d.x), rawPtr(d.y),
                                        rawPtr(d.z), rawPtr(d.m), box, d.g, rawPtr(d.ugrav),
@@ -184,7 +186,7 @@ private:
 // Selects the holder matching the build's accelerator, mirroring NbodyProp's
 // MHolder_t. MType is the multipole expansion type (CartesianQuadrupole<Tmm>).
 template <class MType, class DomainType, class DataType, class Acc>
-using MultipoleHolder = std::conditional_t<cstone::HaveGpu<Acc>{},
+using MultipoleHolder = std::conditional_t<cstone::execution::HaveGpu<Acc>{},
                                            MultipoleHolderGpu<MType, DomainType, DataType>,
                                            MultipoleHolderCpu<MType, DomainType, DataType>>;
 

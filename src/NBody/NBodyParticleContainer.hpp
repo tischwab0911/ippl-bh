@@ -53,18 +53,32 @@ namespace detail {
 // branch. Mirrors the LeapfrogStepper split, so the container needs only a .cu —
 // no per-backend .cpp.
 
-// Per-particle leaf-derived smoothing length: h[i] = cbrtVol / 2^level(leaf(i)).
+// Geometric-mean edge length of a level-`level` octree cell, cbrtVol = cbrt(box volume).
+// reductions[d] = maxTreeLevel - (SFC key bits of axis d) under cstone's mixed-dimension
+// keys: axis d is not split above level reductions[d], so its cell edge is
+// l_d * 2^(min(reductions[d], level) - level). For a cubic box all reductions are 0 and the
+// edge is cbrtVol / 2^level.
+template <class Th>
+HOST_DEVICE_FUN inline Th cellEdge(Th cbrtVol, unsigned level, cstone::AxesBits reductions) {
+    unsigned unsplit = 0;
+    for (int d = 0; d < 3; ++d) {
+        unsplit += reductions[d] < level ? reductions[d] : level;
+    }
+    return cbrtVol * Th(exp2(double(unsplit) / 3.0 - double(level)));
+}
+
+// Per-particle leaf-derived smoothing length: h[i] = cellEdge(level(leaf(i))).
 // Both backends call the same host/device cstone helpers (findNodeBelow,
 // treeLevel). Instantiated for (Th, KeyType).
 template <class Th, class KeyType>
 void setHFromLeavesGpu(const KeyType* keys, const KeyType* leaves, int nLeafKeys,
-                       Th cbrtVol, Th* h, unsigned n);
+                       Th cbrtVol, cstone::AxesBits reductions, Th* h, unsigned n);
 
 template <class Th, class KeyType>
 void setHFromLeaves(const KeyType* keys, const KeyType* leaves, int nLeafKeys,
-                    Th cbrtVol, Th* h, unsigned n) {
+                    Th cbrtVol, cstone::AxesBits reductions, Th* h, unsigned n) {
     if constexpr (kHaveGpu) {
-        setHFromLeavesGpu(keys, leaves, nLeafKeys, cbrtVol, h, n);
+        setHFromLeavesGpu(keys, leaves, nLeafKeys, cbrtVol, reductions, h, n);
     } else {
 #pragma omp parallel for schedule(static)
         for (unsigned i = 0; i < n; ++i) {
@@ -72,7 +86,7 @@ void setHFromLeaves(const KeyType* keys, const KeyType* leaves, int nLeafKeys,
             cstone::TreeNodeIndex leafIdx   = cstone::findNodeBelow(leaves, nLeafKeys, k);
             KeyType               codeRange = leaves[leafIdx + 1] - leaves[leafIdx];
             unsigned              level     = cstone::treeLevel(codeRange);
-            h[i] = cbrtVol / Th(1u << level);
+            h[i] = cellEdge(cbrtVol, level, reductions);
         }
     }
 }
@@ -227,7 +241,7 @@ public:
                             std::array<Tc, 6> boxLoHi,
                             std::array<cstone::BoundaryType, 3> boundaries,
                             MPI_Comm comm = MPI_COMM_WORLD)
-        : domain_(rank, nRanks, bucketSize, bucketSizeFocus, theta, comm,
+        : domain_(kExec, rank, nRanks, bucketSize, bucketSizeFocus, theta, comm,
                   cstone::Box<Tc>(boxLoHi[0], boxLoHi[1], boxLoHi[2], boxLoHi[3],
                                   boxLoHi[4], boxLoHi[5],
                                   boundaries[0], boundaries[1], boundaries[2]))
@@ -261,7 +275,7 @@ public:
         util::for_each_tuple([this, newSize](auto& a) { reallocate(a, newSize, allocGrowthRate_); }, t);
         reallocate(keys,  newSize, allocGrowthRate_);
         reallocate(hZero, newSize, allocGrowthRate_);
-        cstone::fill<kHaveGpu>(hZero.data(), hZero.data() + newSize, Th(0));
+        cstone::fill(kExec, hZero.data(), hZero.data() + newSize, Th(0));
         for (auto* a : userAttribs) a->resize(newSize);
 
         // Open the gap for the new particles: relocate the suffix-halo payload
@@ -275,7 +289,7 @@ public:
         // Zero the whole suffix, not only the new slots: the shifted halos' key slots
         // hold stale values and the grown tail is uninitialized memory. A stale removeKey
         // there would be inherited by a particle that the next sync receives into it.
-        cstone::fill<kHaveGpu>(keys.data() + end, keys.data() + newSize, KeyType(0));
+        cstone::fill(kExec, keys.data() + end, keys.data() + newSize, KeyType(0));
         detail::assignIds(id.data(), end, nLocal, nextId_m, nRanks_m);
         nextId_m += nRanks_m * static_cast<IdType>(nLocal);
 
@@ -400,12 +414,12 @@ private:
         const LocalIndex end   = domain_.endIndex();
         const LocalIndex n     = domain_.nParticlesWithHalos();
         const auto&      bx    = domain_.box();
-        cstone::fill<kHaveGpu>(keys.data(), keys.data() + start, KeyType(0));
-        cstone::fill<kHaveGpu>(keys.data() + end, keys.data() + n, KeyType(0));
-        cstone::computeSfcKeys<kHaveGpu>(x.data(), y.data(), z.data(),
-                                         cstone::sfcKindPointer(keys.data()), start, bx);
-        cstone::computeSfcKeys<kHaveGpu>(x.data() + end, y.data() + end, z.data() + end,
-                                         cstone::sfcKindPointer(keys.data()) + end, n - end, bx);
+        cstone::fill(kExec, keys.data(), keys.data() + start, KeyType(0));
+        cstone::fill(kExec, keys.data() + end, keys.data() + n, KeyType(0));
+        cstone::computeSfcKeys(kExec, x.data(), y.data(), z.data(),
+                               cstone::sfcKindPointer(keys.data()), start, bx);
+        cstone::computeSfcKeys(kExec, x.data() + end, y.data() + end, z.data() + end,
+                               cstone::sfcKindPointer(keys.data()) + end, n - end, bx);
     }
 
     // Restore h after syncGravBH (which threads a dummy h=0 through cstone) for
@@ -418,13 +432,16 @@ private:
             // step over [0, nWithHalos) because focus-tree refinement migrates
             // particles between leaves between calls.
             h.resize(n);
-            auto        leaves  = domain_.focusTree().treeLeavesAcc();
-            const auto& bx      = domain_.box();
-            const Tc    vol     = bx.lx() * bx.ly() * bx.lz();
-            const Th    cbrtVol = static_cast<Th>(std::cbrt(static_cast<double>(vol)));
+            auto           leaves   = domain_.focusTree().treeLeavesAcc();
+            const auto&    bx       = domain_.box();
+            const Tc       vol      = bx.lx() * bx.ly() * bx.lz();
+            const Th       cbrtVol  = static_cast<Th>(std::cbrt(static_cast<double>(vol)));
+            const unsigned maxLevel = cstone::maxTreeLevel<KeyType>{};
+            const auto     reductions =
+                cstone::AxesBits{maxLevel, maxLevel, maxLevel} - bx.getBoxDimBits(maxLevel);
             detail::setHFromLeaves<Th, KeyType>(
                 keys.data(), leaves.data(), static_cast<int>(leaves.size()),
-                cbrtVol, h.data(), n);
+                cbrtVol, reductions, h.data(), n);
         } else {
             // Fill only newly-grown entries — assumes uniform h (the existing
             // entries already hold the correct value from create()/IC or the
@@ -432,7 +449,7 @@ private:
             const LocalIndex oldH = h.size();
             h.resize(n);
             if (n > oldH) {
-                cstone::fill<kHaveGpu>(h.data() + oldH, h.data() + n, uniformH);
+                cstone::fill(kExec, h.data() + oldH, h.data() + n, uniformH);
             }
         }
     }

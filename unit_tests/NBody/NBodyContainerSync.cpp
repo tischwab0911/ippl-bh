@@ -101,6 +101,40 @@ TEST(NBodyParticleContainer, SyncPermutesAttributesInLockstep) {
     verifyLockstep(pc, xPre, yPre, zPre);
 }
 
+// Leaf-based softening (setLeafBasedH) uses cellEdge(): the geometric-mean edge of a
+// level-L octree cell. cstone's mixed-dimension SFC keys give short box axes fewer key
+// bits, so cells in elongated boxes are not box/2^L; compare against the physical node
+// size cstone itself derives (hilbertIBox + centerAndSize) for cubic and elongated boxes.
+TEST(NBodyParticleContainer, CellEdgeMatchesMixedDimensionNodes) {
+    using KeyType = std::uint64_t;
+    using T       = double;
+
+    const unsigned maxLevel = cstone::maxTreeLevel<KeyType>{};
+    const std::vector<cstone::Box<T>> boxes{
+        cstone::Box<T>(0, 1),                                // cube: no reductions
+        cstone::Box<T>(0, 1, 0, 0.015625, 0, 0.00390625),    // reductions {0, 6, 8}
+        cstone::Box<T>(-1e-3, 1e-3, -1e-3, 1e-3, 0.0, 0.5),  // long bunch along z
+    };
+
+    for (const auto& box : boxes) {
+        const auto axesBits   = box.getBoxDimBits(maxLevel);
+        const auto reductions = cstone::AxesBits{maxLevel, maxLevel, maxLevel} - axesBits;
+        const T    cbrtVol    = std::cbrt(box.lx() * box.ly() * box.lz());
+
+        for (unsigned level = 0; level <= 12; ++level) {
+            const auto nodeBox = cstone::sfcIBox(cstone::sfcKey(KeyType(0)), level, axesBits);
+            [[maybe_unused]] const auto [center, halfSize] =
+                cstone::centerAndSize<KeyType>(nodeBox, box);
+            const T    reference = 2 * std::cbrt(halfSize[0] * halfSize[1] * halfSize[2]);
+
+            EXPECT_NEAR(ippl::nbody::detail::cellEdge(cbrtVol, level, reductions) / reference,
+                        1.0, 1e-12)
+                << "box " << box.lx() << " x " << box.ly() << " x " << box.lz() << ", level "
+                << level;
+        }
+    }
+}
+
 int main(int argc, char* argv[]) {
     ippl::initialize(argc, argv);
     int success = 1;

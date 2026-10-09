@@ -18,27 +18,37 @@
 #include <type_traits>
 #include <vector>
 
-// cuda_utils.hpp (memcpyH2D/D2H/D2D, syncGpu) must precede primitives_acc.hpp:
-// cstone::copy_n calls the global memcpyD2D, which has to be declared at
-// that template's definition point.
 #include "cstone/cuda/cuda_utils.hpp"
 #include "cstone/cuda/device_vector.h"
+#include "cstone/execution.hpp"
 #include "cstone/primitives/primitives_acc.hpp"
 
 namespace ippl::nbody {
 
-// Build-global accelerator tag, chosen at configure time exactly like sphexa's
+// Build-global execution policy, chosen at configure time exactly like sphexa's
 // USE_CUDA-driven AccType. The vendored cstone_gpu target defines USE_CUDA
 // PUBLIC, so any GPU build (CUDA or HIP) sees it; the CPU build links only
-// cstone_headers and never defines it.
+// cstone_headers and never defines it. kExec is the policy object cstone's
+// primitives take as first argument: the default GPU stream, or the CPU tag.
 #if defined(USE_CUDA)
-using NBodyAcc = cstone::GpuTag;
+using NBodyAcc = cstone::execution::Gpu;
+inline constexpr NBodyAcc kExec = cstone::execution::gpuDefaultStream;
 #else
-using NBodyAcc = cstone::CpuTag;
+using NBodyAcc = cstone::execution::Cpu;
+inline constexpr NBodyAcc kExec = cstone::execution::cpu;
 #endif
 
 // This inline expression is used to select between CPU and GPU implementations
-inline constexpr bool kHaveGpu = bool(cstone::HaveGpu<NBodyAcc>{});
+inline constexpr bool kHaveGpu = bool(cstone::execution::HaveGpu<NBodyAcc>{});
+
+// Block until all work queued on kExec has finished; a no-op on the CPU build,
+// whose cstone/ryoanji kernels are synchronous. (cstone::syncGpu only accepts a
+// GPU stream, so it cannot sit in a discarded if-constexpr branch of a CPU build.)
+inline void syncExec() {
+#if defined(USE_CUDA)
+    cstone::syncGpu(kExec);
+#endif
+}
 
 // Per-component field storage: GPU-resident DeviceVector on device builds, plain
 // std::vector on the CPU build. Mirrors sphexa ParticlesData::FieldVector.

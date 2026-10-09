@@ -64,7 +64,7 @@ add_library(ippl::nbody_sync ALIAS ippl_nbody_sync)
 
 # Pure host orchestration (no device kernels): always compiled by the CXX
 # compiler. On GPU builds USE_CUDA is propagated PUBLIC from cstone_gpu, selecting
-# NBodyAcc=GpuTag and the GPU MultipoleHolder.
+# NBodyAcc=execution::Gpu and the GPU MultipoleHolder.
 set(_NBODY_COMMON_SOURCES
   NBodySolver.cpp)
 
