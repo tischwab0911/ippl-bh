@@ -52,27 +52,36 @@ constexpr float    kTheta         = 0.5f;
 /*! @brief Solve the given particles with BH and return the relative L2 error against
  *         ryoanji::directSum (same P2P kernel) over all particles.
  *
- * @param bounds  initial container box (open BCs)
+ * @param bounds    initial container box (open BCs), or the box set with setBox (fixed BCs)
+ * @param fixedBox  construct with a placeholder box and fixed boundaries, then setBox(bounds)
+ * @param usedBox   if non-null, receives the box cstone used for the sync
+ * @param h         uniform softening (P2P uses h_i + h_j)
  */
 double relativeErrorVsDirect(const std::vector<double>& xPre, const std::vector<double>& yPre,
                              const std::vector<double>& zPre, const std::vector<double>& qPre,
-                             const std::array<double, 6>& bounds, MultipoleOrder order) {
+                             const std::array<double, 6>& bounds, MultipoleOrder order,
+                             bool fixedBox = false, cstone::Box<double>* usedBox = nullptr,
+                             double h = 0.01) {
     using T = double;
     using P = DoublePrecision;
     using cstone::BoundaryType;
 
     const unsigned n = static_cast<unsigned>(xPre.size());
 
+    const BoundaryType boundary = fixedBox ? BoundaryType::fixed : BoundaryType::open;
     NBodyParticleContainer<P, 3> pc(
         /*rank=*/0, /*nRanks=*/1,
         kBucketSize, kBucketSizeFoc, kTheta,
-        bounds,
-        std::array<BoundaryType, 3>{
-            BoundaryType::open, BoundaryType::open, BoundaryType::open});
+        fixedBox ? std::array<double, 6>{0.0, 1.0, 0.0, 1.0, 0.0, 1.0} : bounds,
+        std::array<BoundaryType, 3>{boundary, boundary, boundary});
+    if (fixedBox) {
+        pc.setBox(cstone::Box<T>(bounds[0], bounds[1], bounds[2], bounds[3], bounds[4], bounds[5],
+                                 boundary, boundary, boundary));
+    }
 
     pc.create(n);
 
-    std::vector<T> hPre(n, 1.0e-2);
+    std::vector<T> hPre(n, h);
     uploadHost(xPre,  getRaw<"Rx">(pc));
     uploadHost(yPre,  getRaw<"Ry">(pc));
     uploadHost(zPre,  getRaw<"Rz">(pc));
@@ -85,7 +94,7 @@ double relativeErrorVsDirect(const std::vector<double>& xPre, const std::vector<
     params.multipoles = order;
 
     NBodySolver<P, 3> solver(pc, params);
-    pc.setUniformH(0.01);
+    pc.setUniformH(h);
     // BH consumes positions/charge/h; velocity/ID are conserved but unused here.
     syncGravBH<P, fields::StdConserved, fields::StdDependent>(pc);
     solver.runSolver();
@@ -107,6 +116,9 @@ double relativeErrorVsDirect(const std::vector<double>& xPre, const std::vector<
     // by the API. Pass the same box dimensions the container was constructed with.
     const auto box = pc.box();
     ryoanji::Vec3<T> boxL{box.lx(), box.ly(), box.lz()};
+    if (usedBox != nullptr) {
+        *usedBox = box;
+    }
 
     ryoanji::directSum(
         /*first=*/start, /*last=*/end, /*numBodies=*/end,
@@ -200,6 +212,67 @@ TEST(NBodySolver, MixedSignNeedsDipoles) {
     // stay at the same-sign level, and the gap to Quadrupole (9x) proves the dipole is used.
     EXPECT_LT(errDQ, 8e-4);
     EXPECT_GT(errQ, 5.0 * errDQ);
+}
+
+// Stretched domains: +1 charges uniform in a pancake (1 x 1 x 1/64) and a needle
+// (1/64 x 1/64 x 1). A box fitted to the particles (fixed boundaries, set with setBox) has
+// a 64:1 aspect ratio, so cstone's mixed-dimension SFC keys drop 6 key bits on each short
+// axis and the cells stay close to cubic. The enclosing cube is the comparison: all key bits
+// on every axis, i.e. flat cells until the tree is 6 levels deep.
+TEST(NBodySolver, StretchedBoxMatchesDirectSum) {
+    struct Case {
+        const char* name;
+        double      lengths[3];
+        double      limitFitted;
+        double      limitCube;
+    };
+    const unsigned maxLevel = cstone::maxTreeLevel<std::uint64_t>{};
+    // Softening well below the needle width (1/64) and the mean spacing (~4e-3). With the
+    // default h = 0.01 the pair cutoff 2h = 0.02 exceeds the needle width: the reference field
+    // is then dominated by softened pairs (8x off the unsoftened sum), and needle leaves
+    // (~1/64 wide) accepted by the softening-blind MAC can still hold sources within 2h, which
+    // M2P applies unsoftened. Measured with h = 0.01: needle 6.4e-3 (fitted) / 8.1e-3 (cube),
+    // pancake 1.9e-4 / 2.5e-4, whose 8 x 8-particle leaves are far wider than 2h.
+    constexpr double kH = 1.0e-3;
+    // Limits ~2.5x the measured errors (GH200, 1 rank): pancake 2.46e-4 fitted / 1.25e-4 cube,
+    // needle 5.43e-4 / 5.91e-4, i.e. the same-sign level of the unit cube (5.18e-4). At equal
+    // theta the fitted box does less work (pancake: 23 % fewer P2P, 18 % fewer M2P; needle:
+    // 14 % fewer M2P), so the cube's lower pancake error is bought with more interactions.
+    for (const Case& c : {Case{"pancake", {1.0, 1.0, 1.0 / 64}, 6e-4, 3e-4},
+                          Case{"needle", {1.0 / 64, 1.0 / 64, 1.0}, 1.4e-3, 1.5e-3}}) {
+        SCOPED_TRACE(c.name);
+        std::vector<double> xPre(kN), yPre(kN), zPre(kN), qPre(kN, 1.0);
+        ::srand48(/*seed=*/271828);
+        for (unsigned i = 0; i < kN; ++i) {
+            xPre[i] = c.lengths[0] * drand48();
+            yPre[i] = c.lengths[1] * drand48();
+            zPre[i] = c.lengths[2] * drand48();
+        }
+        const double side = std::max({c.lengths[0], c.lengths[1], c.lengths[2]});
+        const std::array<double, 6> fitted{0.0, c.lengths[0], 0.0, c.lengths[1], 0.0, c.lengths[2]};
+        const std::array<double, 6> cube{0.0, side, 0.0, side, 0.0, side};
+
+        cstone::Box<double> box(0.0, 1.0);
+        const double errFitted =
+            relativeErrorVsDirect(xPre, yPre, zPre, qPre, fitted, MultipoleOrder::Quadrupole, true, &box, kH);
+        const double errCube =
+            relativeErrorVsDirect(xPre, yPre, zPre, qPre, cube, MultipoleOrder::Quadrupole, true, nullptr, kH);
+        std::printf("[NBodySolver] %s relative L2 error: fitted box (mixed-dimension keys) = %.3e, "
+                    "enclosing cube = %.3e\n", c.name, errFitted, errCube);
+
+        // The box set with setBox survives the sync for fixed boundaries.
+        EXPECT_EQ(box.lx(), c.lengths[0]);
+        EXPECT_EQ(box.ly(), c.lengths[1]);
+        EXPECT_EQ(box.lz(), c.lengths[2]);
+        EXPECT_EQ(box.boundaryX(), cstone::BoundaryType::fixed);
+        const auto bits = box.getBoxDimBits(maxLevel);
+        for (unsigned d = 0; d < 3; ++d) {
+            EXPECT_EQ(bits[d], c.lengths[d] == side ? maxLevel : maxLevel - 6) << "axis " << d;
+        }
+
+        EXPECT_LT(errFitted, c.limitFitted);
+        EXPECT_LT(errCube, c.limitCube);
+    }
 }
 
 TEST(NBodySolver, DipolesRejectPeriodicBox) {

@@ -369,6 +369,11 @@ public:
 
     cstone::Box<Tc> box() const { return domain_.box(); }
 
+    // Box for the next syncGravBH/updateBH. cstone keeps it along axes with fixed or
+    // periodic boundaries and refits open ones. It must contain every particle and be
+    // identical on all ranks. Its aspect ratio sets the mixed-dimension SFC key bits.
+    void setBox(const cstone::Box<Tc>& box) { domain_.setBox(box); }
+
     // MPI communicator the domain and all module-level collectives run on.
     // Defaults to MPI_COMM_WORLD; pass a sub-communicator to the ctor to confine
     // the module to a subset of ranks.
