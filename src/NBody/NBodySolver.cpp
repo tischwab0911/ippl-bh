@@ -19,11 +19,13 @@
 #include "NBody/helpers/GpuTimer.hpp"
 #include "NBody/wrappers/GravityWrapper.hpp"
 
+#include <algorithm>
 #include <cstdint>
 #include <cstdio>
 #include <stdexcept>
 #include <string>
 #include <variant>
+#include <vector>
 
 #include <mpi.h>
 
@@ -119,11 +121,14 @@ void NBodySolver<P, Dim>::runSolver(bool warmup) {
     }
 
     // Same sequence for either multipole type (params.multipoles picked the holder).
+    // numGroups: traversal target groups (0 on the CPU)
+    unsigned long long numGroups = 0;
     auto stats = std::visit(
         [&](auto& holder) {
             holder.setEwaldSettings(ewald);
             cstone::GroupView grp;
             { GpuTimer t(tGroups, collect); grp = holder.computeSpatialGroups(pc, domain); }
+            numGroups = grp.numGroups;
             { GpuTimer t(tUpswp,  collect); holder.upsweep(pc, domain); }
             { GpuTimer t(tBH,     collect); holder.traverse(grp, pc, domain); }
             return holder.readStats();
@@ -146,21 +151,54 @@ void NBodySolver<P, Dim>::runSolver(bool warmup) {
     // with sphexa's timer.logStatistics output. Skipped during the pre_run warmup
     // solve so the printed counts reflect only the timed steps.
     if (collect) {
-        unsigned long long local[5] = {
+        // Owned focus-leaf occupancy (host copy of the layout): count, max and sum(c^2)/sum(c), the
+        // leaf size around an average particle. Far above the bucket size: tree updates lag.
+        unsigned long long numLeaves = 0, maxLeaf = 0, sumSqLeaf = 0;
+        {
+            const auto     layout    = domain.layout();
+            const auto     firstCell = static_cast<std::size_t>(domain.startCell());
+            const auto     lastCell  = static_cast<std::size_t>(domain.endCell());
+            std::vector<cstone::LocalIndex> hostLayout(lastCell - firstCell + 1);
+#if defined(USE_CUDA)
+            cstone::memcpyD2HAsync(kExec, layout.data() + firstCell, hostLayout.size(),
+                                   hostLayout.data());
+            syncExec();
+#else
+            std::copy_n(layout.data() + firstCell, hostLayout.size(), hostLayout.begin());
+#endif
+            numLeaves = lastCell - firstCell;
+            for (std::size_t i = 0; i + 1 < hostLayout.size(); ++i) {
+                const unsigned long long c = hostLayout[i + 1] - hostLayout[i];
+                maxLeaf                    = std::max(maxLeaf, c);
+                sumSqLeaf += c * c;
+            }
+        }
+
+        unsigned long long local[7] = {
             static_cast<unsigned long long>(stats[0]),   // sumP2P
             static_cast<unsigned long long>(stats[2]),   // sumM2P
+            numGroups,                                   // target groups
+            static_cast<unsigned long long>(end - start),  // targets
             static_cast<unsigned long long>(stats[1]),   // maxP2P
             static_cast<unsigned long long>(stats[3]),   // maxM2P
             static_cast<unsigned long long>(stats[4])};  // maxStack
-        unsigned long long sum[2] = {0, 0};
-        unsigned long long mx[3]  = {0, 0, 0};
-        MPI_Allreduce(&local[0], &sum[0], 2, MPI_UNSIGNED_LONG_LONG, MPI_SUM, pc.comm());
-        MPI_Allreduce(&local[2], &mx[0], 3, MPI_UNSIGNED_LONG_LONG, MPI_MAX, pc.comm());
+        unsigned long long sum[4]   = {0, 0, 0, 0};
+        unsigned long long mx[3]    = {0, 0, 0};
+        unsigned long long leafS[2] = {numLeaves, sumSqLeaf};
+        unsigned long long leafSum[2] = {0, 0}, leafMax = 0;
+        MPI_Allreduce(&local[0], &sum[0], 4, MPI_UNSIGNED_LONG_LONG, MPI_SUM, pc.comm());
+        MPI_Allreduce(&local[4], &mx[0], 3, MPI_UNSIGNED_LONG_LONG, MPI_MAX, pc.comm());
+        MPI_Allreduce(leafS, leafSum, 2, MPI_UNSIGNED_LONG_LONG, MPI_SUM, pc.comm());
+        MPI_Allreduce(&maxLeaf, &leafMax, 1, MPI_UNSIGNED_LONG_LONG, MPI_MAX, pc.comm());
         int mpiRank = -1;
         MPI_Comm_rank(pc.comm(), &mpiRank);
         if (mpiRank == 0) {
-            std::printf("[bh.stats] sumP2P=%llu sumM2P=%llu maxP2P=%llu maxM2P=%llu maxStack=%llu\n",
-                        sum[0], sum[1], mx[0], mx[1], mx[2]);
+            const double weightedLeaf =
+                sum[3] > 0 ? static_cast<double>(leafSum[1]) / static_cast<double>(sum[3]) : 0.0;
+            std::printf("[bh.stats] sumP2P=%llu sumM2P=%llu maxP2P=%llu maxM2P=%llu maxStack=%llu "
+                        "groups=%llu targets=%llu leaves=%llu maxLeaf=%llu wLeaf=%.1f\n",
+                        sum[0], sum[1], mx[0], mx[1], mx[2], sum[2], sum[3], leafSum[0], leafMax,
+                        weightedLeaf);
             std::fflush(stdout);
         }
     }

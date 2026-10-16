@@ -133,10 +133,13 @@ public:
     void setEwaldSettings(const ryoanji::EwaldSettings& s) { ewaldSettings_ = s; }
 
     cstone::GroupView computeSpatialGroups(const DataType& d, const DomainType& domain) {
+        // No h (nullptr): cstone splits groups at min(tolFactor * leaf edge, 2h), an SPH criterion.
+        // With h ~ one particle spacing (BH softening) groups shattered into a few particles, each
+        // costing a warp tile and a tree walk. The leaf term alone keeps groups compact.
         return mHolder_.computeSpatialGroups(domain.startIndex(), domain.endIndex(), rawPtr(d.x),
-                                             rawPtr(d.y), rawPtr(d.z), rawPtr(d.h),
-                                             domain.focusTree(), domain.layout().data(),
-                                             domain.box());
+                                             rawPtr(d.y), rawPtr(d.z),
+                                             static_cast<const Th*>(nullptr), domain.focusTree(),
+                                             domain.layout().data(), domain.box());
     }
 
     void upsweep(const DataType& d, const DomainType& domain) {
