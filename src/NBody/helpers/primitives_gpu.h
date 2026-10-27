@@ -80,6 +80,24 @@ void driftWrapGpu(unsigned start, unsigned n, T* Rx, T* Ry, T* Rz,
 template <class T>
 void shiftRightGpu(T* data, unsigned first, unsigned last, unsigned by);
 
+// Consistency checks of the Barnes-Hut sources (NBodySolver: info level 3, and always when the
+// traversal fails). Defined + instantiated (double, float) in primitives_gpu.cu.
+struct PositionCheck {
+    unsigned long long nonFinite = 0;  // particles with a non-finite coordinate
+    unsigned long long outside   = 0;  // finite particles outside the domain box
+};
+
+// Particles [first, last) against the box.
+template <class T>
+PositionCheck checkPositionsGpu(const T* x, const T* y, const T* z, unsigned first, unsigned last,
+                                cstone::Box<T> box);
+
+// Largest edge of the bounding box of every target group [groupStart[g], groupEnd[g]), into
+// extents[g] (device memory).
+template <class T>
+void groupExtentsGpu(const T* x, const T* y, const T* z, const unsigned* groupStart,
+                     const unsigned* groupEnd, unsigned numGroups, float* extents);
+
 template <class T>
 void shiftRight(T* data, unsigned first, unsigned last, unsigned by) {
     if (last <= first || by == 0u) { return; }

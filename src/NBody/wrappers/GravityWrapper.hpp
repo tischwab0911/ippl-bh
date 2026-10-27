@@ -110,6 +110,7 @@ public:
     }
 
     util::array<uint64_t, 5> readStats() const { return {0, 0, 0, 0, 0}; }
+    uint64_t retriedGroups() const { return 0; }
 
     const MType* multipoles() const { return multipoles_.data(); }
 
@@ -178,6 +179,7 @@ public:
 
     //! @brief return numP2P, maxP2P, numM2P, maxM2P, maxStack stats
     util::array<uint64_t, 5> readStats() const { return mHolder_.readStats(); }
+    uint64_t retriedGroups() const { return mHolder_.retriedGroups(); }
 
     const MType* deviceMultipoles() const { return mHolder_.deviceMultipoles(); }
 

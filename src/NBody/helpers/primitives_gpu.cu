@@ -122,7 +122,70 @@ __global__ void driftWrapKernel(unsigned start, unsigned n,
     Rz[i] = X[2];
 }
 
+template <class T>
+__global__ void checkPositionsKernel(const T* __restrict__ x, const T* __restrict__ y,
+                                     const T* __restrict__ z, unsigned first, unsigned n,
+                                     cstone::Box<T> box, unsigned long long* counts) {
+    unsigned tid = blockIdx.x * blockDim.x + threadIdx.x;
+    if (tid >= n) { return; }
+    unsigned i = first + tid;
+    const T xi = x[i], yi = y[i], zi = z[i];
+    if (!isfinite(xi) || !isfinite(yi) || !isfinite(zi)) {
+        atomicAdd(&counts[0], 1ull);
+    } else if (xi < box.xmin() || xi > box.xmax() || yi < box.ymin() || yi > box.ymax()
+               || zi < box.zmin() || zi > box.zmax()) {
+        atomicAdd(&counts[1], 1ull);
+    }
+}
+
+template <class T>
+__global__ void groupExtentsKernel(const T* __restrict__ x, const T* __restrict__ y,
+                                   const T* __restrict__ z, const unsigned* __restrict__ groupStart,
+                                   const unsigned* __restrict__ groupEnd, unsigned numGroups,
+                                   float* __restrict__ extents) {
+    unsigned g = blockIdx.x * blockDim.x + threadIdx.x;
+    if (g >= numGroups) { return; }
+    const unsigned first = groupStart[g], last = groupEnd[g];
+    if (last <= first) {
+        extents[g] = 0.0f;
+        return;
+    }
+    T lo[3] = {x[first], y[first], z[first]}, hi[3] = {lo[0], lo[1], lo[2]};
+    for (unsigned i = first + 1; i < last; ++i) {
+        const T p[3] = {x[i], y[i], z[i]};
+        for (int d = 0; d < 3; ++d) {
+            lo[d] = p[d] < lo[d] ? p[d] : lo[d];
+            hi[d] = p[d] > hi[d] ? p[d] : hi[d];
+        }
+    }
+    T edge = hi[0] - lo[0];
+    edge   = hi[1] - lo[1] > edge ? hi[1] - lo[1] : edge;
+    edge   = hi[2] - lo[2] > edge ? hi[2] - lo[2] : edge;
+    extents[g] = static_cast<float>(edge);  // NaN coordinates propagate as NaN
+}
+
 }  // namespace
+
+template <class T>
+PositionCheck checkPositionsGpu(const T* x, const T* y, const T* z, unsigned first, unsigned last,
+                                cstone::Box<T> box) {
+    PositionCheck result;
+    if (last <= first) { return result; }
+    thrust::device_vector<unsigned long long> counts(2, 0ull);
+    checkPositionsKernel<T><<<gridFor(last - first), kBlockSize>>>(
+        x, y, z, first, last - first, box, thrust::raw_pointer_cast(counts.data()));
+    result.nonFinite = counts[0];
+    result.outside   = counts[1];
+    return result;
+}
+
+template <class T>
+void groupExtentsGpu(const T* x, const T* y, const T* z, const unsigned* groupStart,
+                     const unsigned* groupEnd, unsigned numGroups, float* extents) {
+    if (numGroups == 0u) { return; }
+    groupExtentsKernel<T><<<gridFor(numGroups), kBlockSize>>>(x, y, z, groupStart, groupEnd,
+                                                             numGroups, extents);
+}
 
 template <class Tout, class Tin>
 void axpy3Gpu(unsigned start, unsigned n,
@@ -165,6 +228,14 @@ template void driftWrapGpu<double>(unsigned, unsigned, double*, double*, double*
 template void driftWrapGpu<float> (unsigned, unsigned, float*,  float*,  float*,
                                    const float*,  const float*,  const float*,  float,
                                    cstone::Box<float>);
+template PositionCheck checkPositionsGpu<double>(const double*, const double*, const double*,
+                                                 unsigned, unsigned, cstone::Box<double>);
+template PositionCheck checkPositionsGpu<float>(const float*, const float*, const float*, unsigned,
+                                                unsigned, cstone::Box<float>);
+template void groupExtentsGpu<double>(const double*, const double*, const double*,
+                                      const unsigned*, const unsigned*, unsigned, float*);
+template void groupExtentsGpu<float>(const float*, const float*, const float*, const unsigned*,
+                                     const unsigned*, unsigned, float*);
 template void shiftRightGpu<double>(double*, unsigned, unsigned, unsigned);
 template void shiftRightGpu<float> (float*,  unsigned, unsigned, unsigned);
 template void shiftRightGpu<std::uint32_t>(std::uint32_t*, unsigned, unsigned, unsigned);

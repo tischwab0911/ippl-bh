@@ -53,6 +53,9 @@ public:
         int   numShells = 1;      // BH near-field image-lattice extent (periodic only)
         ryoanji::EwaldSettings ewaldSettings;
         MultipoleOrder multipoles = MultipoleOrder::Quadrupole;  // fixed per solver instance
+        // Consistency checks of the sources every solve (positions against the box, target-group
+        // extents), printed as [bh.check]. A failed traversal always reports them.
+        bool checks = false;
     };
 
     NBodySolver(Container& pc, Params params);

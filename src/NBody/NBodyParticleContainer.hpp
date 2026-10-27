@@ -20,6 +20,7 @@
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
+#include <memory>
 #include <string_view>
 #include <tuple>
 #include <vector>
@@ -250,6 +251,30 @@ public:
         , nRanks_m(static_cast<IdType>(nRanks)) {}
     ~NBodyParticleContainer() = default;
 
+    // Replace the cstone domain by a fresh one (new bucket sizes and box) and keep every buffer
+    // of the container with its capacity. All particles and halos are dropped: the container is
+    // empty as after construction, and the next create() and sync start the new domain from
+    // scratch. Rebuilding the container instead frees buffers that GPU-aware MPI has used, and
+    // Cray MPICH's GPU IPC keeps freed device buffers that a peer mapped: device memory grew by
+    // the size of those buffers at every rebuild.
+    void resetDomain(unsigned bucketSize, unsigned bucketSizeFocus, float theta,
+                     const cstone::Box<Tc>& box) {
+        int rank = 0;
+        MPI_Comm_rank(comm_, &rank);
+        // Construct in place: assigning a temporary copies it (cstone's DeviceVector has no move),
+        // and views the domain caches into its own buffers would keep pointing into the
+        // destroyed temporary.
+        std::destroy_at(&domain_);
+        std::construct_at(&domain_, kExec, rank, static_cast<int>(nRanks_m), bucketSize,
+                          bucketSizeFocus, theta, comm_, box);
+        // Empty arrays (capacity kept): the first sync of the new domain takes the array size as
+        // its particle count, so a rank that packs nothing (getLocalNum() == 0 == n, no create())
+        // would otherwise hand the old domain's particles to it.
+        util::for_each_tuple([](auto& a) { a.resize(0); }, dataTuple());
+        keys.resize(0);
+        hZero.resize(0);
+    }
+
     NBodyParticleContainer(const NBodyParticleContainer&)            = delete;
     NBodyParticleContainer& operator=(const NBodyParticleContainer&) = delete;
     NBodyParticleContainer(NBodyParticleContainer&&) noexcept            = default;
@@ -355,6 +380,23 @@ public:
     LocalIndex startIndex()  const { return domain_.startIndex(); }
     LocalIndex endIndex()    const { return domain_.endIndex(); }
     LocalIndex nWithHalos()  const { return domain_.nParticlesWithHalos(); }
+
+    // Bytes reserved by the container's own buffers (capacities: fields, keys, scratch and halo
+    // buffers). The internal buffers of the cstone domain (trees, layout, exchange) are not counted.
+    std::size_t reservedBytes() const {
+        std::size_t bytes = 0;
+        auto add = [&bytes](const auto& v) { bytes += v.capacity() * sizeof(*v.data()); };
+        util::for_each_tuple(add, dataTuple());
+        add(keys);
+        add(scratch0);
+        add(scratch1);
+        add(scratchTh);
+        add(scratchSfc);
+        add(haloSendBuf_);
+        add(haloRecvBuf_);
+        add(hZero);
+        return bytes;
+    }
 
     // Record the uniform smoothing length used by ryoanji P2P softening.
     // syncGravBH passes a dummy h=0 buffer to cstone (so halo bounding boxes are
