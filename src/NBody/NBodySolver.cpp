@@ -27,6 +27,8 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <tuple>
+#include <type_traits>
 #include <variant>
 #include <vector>
 
@@ -186,8 +188,9 @@ public:
     using DomainT   = typename Container::DomainT;
     using HolderQ   = MultipoleHolder<ryoanji::CartesianQuadrupole<Tmm>, DomainT, Container, NBodyAcc>;
     using HolderMDQ = MultipoleHolder<ryoanji::CartesianMDQpole<Tmm>, DomainT, Container, NBodyAcc>;
+    using HolderH   = HeavisideHolder<DomainT, Container, NBodyAcc>;
 
-    using Holders   = std::variant<HolderQ, HolderMDQ>;
+    using Holders   = std::variant<HolderQ, HolderMDQ, HolderH>;
 
     Impl(Container& pc, Params params)
         : pc_(pc), params_(params), mHolder_(makeHolder(params.multipoles)) {}
@@ -197,12 +200,16 @@ public:
         if (order == MultipoleOrder::DipoleQuadrupole) {
             return Holders(std::in_place_type<HolderMDQ>);
         }
+        if (order == MultipoleOrder::Heaviside) {
+            return Holders(std::in_place_type<HolderH>);
+        }
         return Holders(std::in_place_type<HolderQ>);
     }
 
     Container& pc_;
     Params     params_;
     Holders    mHolder_;
+    unsigned long long remoteMacFailures_ = 0;
 };
 
 template <class P, unsigned Dim>
@@ -213,7 +220,22 @@ NBodySolver<P, Dim>::NBodySolver(Container& pc, Params params) {
             "NBodySolver: dipole multipoles do not support periodic boxes (ryoanji's Ewald "
             "summation exists for quadrupole multipoles only).");
     }
+    if (params.multipoles == MultipoleOrder::Heaviside
+        && pc.domain().box().boundaryX() == cstone::BoundaryType::periodic) {
+        throw std::invalid_argument(
+            "NBodySolver: per-particle velocities (Heaviside multipoles) support open boxes only.");
+    }
     impl_ = std::make_unique<Impl>(pc, params);
+}
+
+template <class P, unsigned Dim>
+void NBodySolver<P, Dim>::setHeavisideParams(const ryoanji::HeavisideParams<typename P::Tf>& params) {
+    impl_->params_.heaviside = params;
+}
+
+template <class P, unsigned Dim>
+unsigned long long NBodySolver<P, Dim>::remoteMacFailures() const {
+    return impl_->remoteMacFailures_;
 }
 
 template <class P, unsigned Dim>
@@ -257,6 +279,14 @@ void NBodySolver<P, Dim>::runSolver(bool warmup) {
         cstone::fill(kExec, pc.ax.data() + start, pc.ax.data() + end, Ta(0));
         cstone::fill(kExec, pc.ay.data() + start, pc.ay.data() + end, Ta(0));
         cstone::fill(kExec, pc.az.data() + start, pc.az.data() + end, Ta(0));
+        if (params.multipoles == MultipoleOrder::Heaviside) {
+            cstone::fill(kExec, pc.cx.data() + start, pc.cx.data() + end, Ta(0));
+            cstone::fill(kExec, pc.cy.data() + start, pc.cy.data() + end, Ta(0));
+        }
+    }
+    if (params.multipoles == MultipoleOrder::Heaviside) {
+        // Halo sources need their rapidity for P2P; syncGrav moves w only with owned particles.
+        pc.exchangeHalos(std::tie(pc.w), pc.haloSendBuf(), pc.haloRecvBuf());
     }
 
     // Same sequence for either multipole type (params.multipoles picked the holder).
@@ -266,6 +296,9 @@ void NBodySolver<P, Dim>::runSolver(bool warmup) {
     auto stats = std::visit(
         [&](auto& holder) {
             holder.setEwaldSettings(ewald);
+            if constexpr (std::is_same_v<std::decay_t<decltype(holder)>, typename Impl::HolderH>) {
+                holder.setHeavisideParams(params.heaviside);
+            }
             cstone::GroupView grp;
             { GpuTimer t(tGroups, collect); grp = holder.computeSpatialGroups(pc, domain); }
             numGroups = grp.numGroups;
@@ -276,6 +309,12 @@ void NBodySolver<P, Dim>::runSolver(bool warmup) {
             return holder.readStats();
         },
         s.mHolder_);
+
+    if (auto* heaviside = std::get_if<typename Impl::HolderH>(&s.mHolder_)) {
+        unsigned long long local = heaviside->remoteMacFailures(), global = 0;
+        MPI_Allreduce(&local, &global, 1, MPI_UNSIGNED_LONG_LONG, MPI_SUM, pc.comm());
+        s.remoteMacFailures_ = global;
+    }
 
     // sphexa gravity_wrapper guard: ryoanji signals traversal-stack exhaustion by
     // setting maxP2P = 0xFFFFFFFF. Without this check the kernel returns with

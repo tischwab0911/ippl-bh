@@ -40,4 +40,9 @@ using StdDependent = util::FieldList<"Ex", "Ey", "Ez", "ugrav">;
 // ID is omitted: such drivers identify particles through aux64.
 using AuxConserved = util::FieldList<"Px", "Py", "Pz", "aux0", "aux64">;
 
+// Sources with per-particle velocities (MultipoleOrder::Heaviside): the payload of
+// AuxConserved plus the source rapidity w, and the second field channel Cx, Cy as output.
+using RelConserved = util::FieldList<"Px", "Py", "Pz", "aux0", "aux64", "w">;
+using RelDependent = util::FieldList<"Ex", "Ey", "Ez", "ugrav", "Cx", "Cy">;
+
 }  // namespace ippl::nbody::fields

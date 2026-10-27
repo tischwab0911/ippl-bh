@@ -35,6 +35,7 @@
 #include "cstone/domain/domain.hpp"
 #include "ryoanji/interface/ewald.cuh"
 #include "ryoanji/interface/global_multipole.hpp"
+#include "ryoanji/interface/heaviside_holder.cuh"
 #include "ryoanji/interface/multipole_holder.cuh"
 #include "ryoanji/nbody/ewald.hpp"
 #include "ryoanji/nbody/traversal_cpu.hpp"
@@ -187,6 +188,88 @@ private:
     ryoanji::MultipoleHolder<Tc, Th, Tm, Ta, Tf, KeyType, MType> mHolder_;
     ryoanji::EwaldSettings                                       ewaldSettings_;
 };
+
+// Sources with per-particle velocities (MultipoleOrder::Heaviside, GPU only): the source
+// rapidity relative to the frame is d.w; the traversal writes E~ to (ax, ay, az) and the
+// second channel to (cx, cy). Periodic boxes are not supported.
+template <class DomainType, class DataType>
+class HeavisideHolderGpu {
+    using KeyType = typename DataType::KeyType;
+    using Tc      = typename std::decay_t<decltype(std::declval<DataType>().x)>::value_type;
+    using Th      = typename std::decay_t<decltype(std::declval<DataType>().h)>::value_type;
+    using Tm      = typename std::decay_t<decltype(std::declval<DataType>().m)>::value_type;
+    using Ta      = typename std::decay_t<decltype(std::declval<DataType>().ax)>::value_type;
+    using Tf      = typename DomainType::RealType;
+
+public:
+    using Params = ryoanji::HeavisideParams<Tf>;
+
+    void setEwaldSettings(const ryoanji::EwaldSettings&) {}
+    void setHeavisideParams(const Params& p) { params_ = p; }
+
+    cstone::GroupView computeSpatialGroups(const DataType& d, const DomainType& domain) {
+        return mHolder_.computeSpatialGroups(domain.startIndex(), domain.endIndex(), rawPtr(d.x),
+                                             rawPtr(d.y), rawPtr(d.z), domain.focusTree(),
+                                             domain.layout().data(), domain.box());
+    }
+
+    void upsweep(const DataType& d, const DomainType& domain) {
+        mHolder_.upsweep(rawPtr(d.x), rawPtr(d.y), rawPtr(d.z), rawPtr(d.m), rawPtr(d.w),
+                         domain.globalTree(), domain.focusTree(), domain.layout().data(), params_);
+    }
+
+    void traverse(cstone::GroupView grp, DataType& d, const DomainType& domain) {
+        if (domain.box().boundaryX() == cstone::BoundaryType::periodic) {
+            throw std::runtime_error("Barnes-Hut: per-particle velocities (Heaviside multipoles) "
+                                     "support open boxes only.");
+        }
+        mHolder_.compute(grp, rawPtr(d.x), rawPtr(d.y), rawPtr(d.z), rawPtr(d.m), rawPtr(d.h),
+                         rawPtr(d.w), d.g, rawPtr(d.ax), rawPtr(d.ay), rawPtr(d.az), rawPtr(d.cx),
+                         rawPtr(d.cy));
+        d.egrav = 0;
+        const auto s   = mHolder_.readStats();
+        stats_         = {s[0], s[1], s[2], s[3], s[4]};
+        remoteFailed_  = s[5];
+    }
+
+    //! @brief return numP2P, maxP2P, numM2P, maxM2P, maxStack stats of the last traverse
+    util::array<uint64_t, 5> readStats() const { return stats_; }
+    //! @brief remote leaves applied as multipoles although they failed the scaled MAC
+    uint64_t remoteMacFailures() const { return remoteFailed_; }
+    uint64_t retriedGroups() const { return mHolder_.retriedGroups(); }
+
+private:
+    ryoanji::HeavisideHolder<Tc, Th, Tm, Ta, Tf, KeyType> mHolder_;
+    Params                                                params_;
+    util::array<uint64_t, 5>                              stats_{0, 0, 0, 0, 0};
+    uint64_t                                              remoteFailed_ = 0;
+};
+
+// CPU builds have no Heaviside traversal; the solver rejects MultipoleOrder::Heaviside there.
+template <class DomainType, class DataType>
+class HeavisideHolderCpu {
+    using Tf = typename DomainType::RealType;
+
+public:
+    using Params = ryoanji::HeavisideParams<Tf>;
+    [[noreturn]] static void unsupported() {
+        throw std::runtime_error("Barnes-Hut: per-particle velocities (Heaviside multipoles) need a "
+                                 "GPU build.");
+    }
+    void setEwaldSettings(const ryoanji::EwaldSettings&) {}
+    void setHeavisideParams(const Params&) {}
+    cstone::GroupView computeSpatialGroups(const DataType&, const DomainType&) { unsupported(); }
+    void upsweep(const DataType&, const DomainType&) { unsupported(); }
+    void traverse(cstone::GroupView, DataType&, const DomainType&) { unsupported(); }
+    util::array<uint64_t, 5> readStats() const { return {0, 0, 0, 0, 0}; }
+    uint64_t remoteMacFailures() const { return 0; }
+    uint64_t retriedGroups() const { return 0; }
+};
+
+template <class DomainType, class DataType, class Acc>
+using HeavisideHolder = std::conditional_t<cstone::execution::HaveGpu<Acc>{},
+                                           HeavisideHolderGpu<DomainType, DataType>,
+                                           HeavisideHolderCpu<DomainType, DataType>>;
 
 // Selects the holder matching the build's accelerator, mirroring NbodyProp's
 // MHolder_t. MType is the multipole expansion type (CartesianQuadrupole<Tmm>).

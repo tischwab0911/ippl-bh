@@ -204,11 +204,15 @@ public:
     //   Payload   : aux0 aux64          (application-defined per-particle data that a
     //                                    driver carries through redistribution by listing
     //                                    them as conserved; see fields::AuxConserved)
-    static constexpr std::array<std::string_view, 15> fieldNames{
+    //   Heaviside : Cx Cy (dependent, second field channel), w (conserved, source rapidity
+    //               relative to the frame); used with MultipoleOrder::Heaviside, see
+    //               fields::RelConserved / fields::RelDependent
+    static constexpr std::array<std::string_view, 18> fieldNames{
         "Rx", "Ry", "Rz", "h", "charge",
         "Px", "Py", "Pz", "ID",
         "Ex", "Ey", "Ez", "ugrav",
-        "aux0", "aux64"};
+        "aux0", "aux64",
+        "Cx", "Cy", "w"};
 
     using DataTupleT = std::tuple<
         FieldVector<Tc>&, FieldVector<Tc>&, FieldVector<Tc>&,
@@ -216,7 +220,8 @@ public:
         FieldVector<Tc>&, FieldVector<Tc>&, FieldVector<Tc>&,
         FieldVector<IdType>&,
         FieldVector<Ta>&, FieldVector<Ta>&, FieldVector<Ta>&, FieldVector<Ta>&,
-        FieldVector<double>&, FieldVector<std::uint64_t>&>;
+        FieldVector<double>&, FieldVector<std::uint64_t>&,
+        FieldVector<Ta>&, FieldVector<Ta>&, FieldVector<Tm>&>;
     using DataTupleConstT = std::tuple<
         const FieldVector<Tc>&, const FieldVector<Tc>&, const FieldVector<Tc>&,
         const FieldVector<Th>&, const FieldVector<Tm>&,
@@ -224,13 +229,14 @@ public:
         const FieldVector<IdType>&,
         const FieldVector<Ta>&, const FieldVector<Ta>&, const FieldVector<Ta>&,
         const FieldVector<Ta>&,
-        const FieldVector<double>&, const FieldVector<std::uint64_t>&>;
+        const FieldVector<double>&, const FieldVector<std::uint64_t>&,
+        const FieldVector<Ta>&, const FieldVector<Ta>&, const FieldVector<Tm>&>;
 
     DataTupleT dataTuple() {
-        return std::tie(x, y, z, h, m, px, py, pz, id, ax, ay, az, ugrav, aux0, aux64);
+        return std::tie(x, y, z, h, m, px, py, pz, id, ax, ay, az, ugrav, aux0, aux64, cx, cy, w);
     }
     DataTupleConstT dataTuple() const {
-        return std::tie(x, y, z, h, m, px, py, pz, id, ax, ay, az, ugrav, aux0, aux64);
+        return std::tie(x, y, z, h, m, px, py, pz, id, ax, ay, az, ugrav, aux0, aux64, cx, cy, w);
     }
 
     static_assert(std::tuple_size_v<DataTupleT> == fieldNames.size(),
@@ -440,6 +446,10 @@ public:
     // cstone's scratch-buffer element-size requirement (<= sizeof(Tc)).
     FieldVector<double>        aux0;   // aux0  (e.g. per-particle time step)
     FieldVector<std::uint64_t> aux64;  // aux64 (e.g. 64-bit application particle ID)
+    // Sources with per-particle velocities (MultipoleOrder::Heaviside): second field channel
+    // (Cx, Cy) and the source rapidity relative to the frame (w); see ryoanji::P2PHeaviside.
+    FieldVector<Ta>            cx, cy;
+    FieldVector<Tm>            w;
     Tc                  g{Tc(1)};      // gravitational/Coulomb prefactor
     Tc                  egrav{Tc(0)};  // total potential energy (unused output)
 

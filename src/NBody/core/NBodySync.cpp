@@ -59,6 +59,10 @@ template void syncGravBH<DoublePrecision, fields::AuxConserved, fields::StdDepen
     NBodyParticleContainer<DoublePrecision, 3>&);
 template void syncGravBH<MixedPrecision, fields::AuxConserved, fields::StdDependent>(
     NBodyParticleContainer<MixedPrecision, 3>&);
+template void syncGravBH<DoublePrecision, fields::RelConserved, fields::RelDependent>(
+    NBodyParticleContainer<DoublePrecision, 3>&);
+template void syncGravBH<MixedPrecision, fields::RelConserved, fields::RelDependent>(
+    NBodyParticleContainer<MixedPrecision, 3>&);
 
 // Test-only combo (per-driver field-list selection): conserve only Px and ID, so
 // Py/Pz are NOT permuted. unit_tests/NBody names the same literal FieldList type.
