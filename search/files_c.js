@@ -1,6 +1,25 @@
 var searchData=
 [
-  ['operations_2eh_0',['Operations.h',['../Operations_8h.html',1,'']]],
-  ['orthogonalrecursivebisection_2eh_1',['OrthogonalRecursiveBisection.h',['../OrthogonalRecursiveBisection_8h.html',1,'']]],
-  ['orthogonalrecursivebisection_2ehpp_2',['OrthogonalRecursiveBisection.hpp',['../OrthogonalRecursiveBisection_8hpp.html',1,'']]]
+  ['nativenufft_2eh_0',['NativeNUFFT.h',['../NativeNUFFT_8h.html',1,'']]],
+  ['nbodykokkosview_2ehpp_1',['NBodyKokkosView.hpp',['../NBodyKokkosView_8hpp.html',1,'']]],
+  ['nbodymanager_2ehpp_2',['NBodyManager.hpp',['../NBodyManager_8hpp.html',1,'']]],
+  ['nbodyparticlecontainer_2ehpp_3',['NBodyParticleContainer.hpp',['../NBodyParticleContainer_8hpp.html',1,'']]],
+  ['nbodysolver_2ecpp_4',['NBodySolver.cpp',['../NBodySolver_8cpp.html',1,'']]],
+  ['nbodysolver_2ehpp_5',['NBodySolver.hpp',['../NBodySolver_8hpp.html',1,'']]],
+  ['nbodysync_2ecpp_6',['NBodySync.cpp',['../NBodySync_8cpp.html',1,'']]],
+  ['ndindex_2eh_7',['NDIndex.h',['../NDIndex_8h.html',1,'']]],
+  ['ndindex_2ehpp_8',['NDIndex.hpp',['../NDIndex_8hpp.html',1,'']]],
+  ['ndregion_2eh_9',['NDRegion.h',['../NDRegion_8h.html',1,'']]],
+  ['ndregion_2ehpp_10',['NDRegion.hpp',['../NDRegion_8hpp.html',1,'']]],
+  ['nedelecspace_2eh_11',['NedelecSpace.h',['../NedelecSpace_8h.html',1,'']]],
+  ['nedelecspace_2ehpp_12',['NedelecSpace.hpp',['../NedelecSpace_8hpp.html',1,'']]],
+  ['nodes1d_2eh_13',['Nodes1D.h',['../Nodes1D_8h.html',1,'']]],
+  ['nodes1ddetail_2ehpp_14',['Nodes1DDetail.hpp',['../Nodes1DDetail_8hpp.html',1,'']]],
+  ['nonstandardfdtdsolver_2eh_15',['NonStandardFDTDSolver.h',['../NonStandardFDTDSolver_8h.html',1,'']]],
+  ['nonstandardfdtdsolver_2ehpp_16',['NonStandardFDTDSolver.hpp',['../NonStandardFDTDSolver_8hpp.html',1,'']]],
+  ['normaldistribution_2eh_17',['NormalDistribution.h',['../NormalDistribution_8h.html',1,'']]],
+  ['nufft_2eh_18',['NUFFT.h',['../NUFFT_8h.html',1,'']]],
+  ['nufft_2ehpp_19',['NUFFT.hpp',['../NUFFT_8hpp.html',1,'']]],
+  ['nullsolver_2eh_20',['NullSolver.h',['../NullSolver_8h.html',1,'']]],
+  ['particleattrib_2ehpp_21',['ParticleAttrib.hpp',['../NBody_2core_2ParticleAttrib_8hpp.html',1,'']]]
 ];

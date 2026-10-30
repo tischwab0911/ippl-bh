@@ -1,3 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$structCustomDistributionFunctions_1_1CDF.html" title=" " alt="" coords="5,5,227,31"/>
+<area shape="rect" id="node1" href="$classippl_1_1BaseManager.html" title="A base class for managing simulations using IPPL." alt="" coords="5,45,133,70"/>
+<area shape="rect" id="node2" href="$classippl_1_1PicManager.html" title="A template class for managing Particle&#45;in&#45;Cell (PIC) simulations." alt="" coords="200,5,340,45"/>
+<area shape="rect" id="node3" href="$classippl_1_1nbody_1_1NBodyManager.html" title=" " alt="" coords="181,69,359,109"/>
 </map>

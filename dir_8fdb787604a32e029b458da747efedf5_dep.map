@@ -1,0 +1,8 @@
+<map id="physics" name="physics">
+<area shape="rect" id="node1" href="dir_7b784d71256741fdbd9b94c27fdff37a.html" title="helpers" alt="" coords="27,125,91,151"/>
+<area shape="rect" id="node2" href="dir_eb3810bc50c35c677c9940b8d4b4c390.html" title="core" alt="" coords="115,125,162,151"/>
+<area shape="rect" id="node3" href="dir_8fdb787604a32e029b458da747efedf5.html" title="physics" alt="" coords="61,52,128,77"/>
+<area shape="rect" id="edge1-headlabel" href="dir_000027_000013.html" title="2" alt="" coords="76,105,84,120"/>
+<area shape="rect" id="edge2-headlabel" href="dir_000027_000004.html" title="2" alt="" coords="125,98,133,112"/>
+<area shape="rect" id="clust1" href="dir_c8fcebb7f72bfbfff11a5ea54135b7df.html" title="NBody" alt="" coords="16,16,173,161"/>
+</map>

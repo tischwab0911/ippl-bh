@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['writemode_0',['WriteMode',['../classInform.html#a417eec1dafcefe4f47c65349a361980a',1,'Inform']]]
+  ['rootfindermethod_0',['RootFinderMethod',['../namespaceippl_1_1nodes1d.html#ac2c86d69d6f8e3b2accabb3454156288',1,'ippl::nodes1d']]]
 ];

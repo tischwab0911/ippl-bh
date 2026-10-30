@@ -1,0 +1,5 @@
+<map id="NBodySolver.hpp" name="NBodySolver.hpp">
+<area shape="rect" id="node1" title="BH solver for coulomb interactions in NBody simulations." alt="" coords="87,5,210,31"/>
+<area shape="rect" id="node2" href="$NBodyManager_8hpp.html" title="A base class to derive simulation managers for NBody simulations." alt="" coords="5,79,140,104"/>
+<area shape="rect" id="node3" href="$NBodySolver_8cpp.html" title="BH solver for coulomb interactions in NBody simulations." alt="" coords="165,79,287,104"/>
+</map>

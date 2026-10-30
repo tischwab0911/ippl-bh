@@ -28,7 +28,7 @@ MathJax.Hub.Config({
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">IPPL (Independent Parallel Particle Layer)
+   <div id="projectname">IPPL (Independent Parallel Particle Layer)<span id="projectnumber">&#160;3.4.0</span>
    </div>
    <div id="projectbrief">IPPL</div>
   </td>
@@ -80,18 +80,29 @@ $(function() {
 &#160;
 
 <h3><a id="index_b" name="index_b"></a>- b -</h3><ul>
-<li>balance()&#160;:&#160;<a class="el" href="classChargedParticles.html#a45538bf9b1c10810bce41c594854395c">ChargedParticles&lt; PLayout, T, Dim &gt;</a>, <a class="el" href="classLoadBalancer.html#a762ed77842ae707f0a6233e5552cfbe4">LoadBalancer&lt; T, Dim &gt;</a></li>
+<li>backward()&#160;:&#160;<a class="el" href="classippl_1_1fft_1_1CuFFTMpC2C.html#ad548c84efbd6c921e0555a856e11c770">ippl::fft::CuFFTMpC2C&lt; T, Dim, MemSpace &gt;</a>, <a class="el" href="classippl_1_1fft_1_1CuFFTMpR2C.html#a5d52b6b395a3552b49f1b005ae333cad">ippl::fft::CuFFTMpR2C&lt; T, Dim, MemSpace &gt;</a>, <a class="el" href="classippl_1_1fft_1_1HeffteC2C.html#a2fe7b3366d80ff2f163e30723cc624ac">ippl::fft::HeffteC2C&lt; T, Dim, MemSpace &gt;</a>, <a class="el" href="classippl_1_1fft_1_1HeffteR2C.html#ab693babbe3db3914f1729b0245e94a50">ippl::fft::HeffteR2C&lt; T, Dim, MemSpace &gt;</a></li>
+<li>backwardPruned()&#160;:&#160;<a class="el" href="classippl_1_1FFT_3_01PrunedCCTransform_00_01ComplexField_01_4.html#a516e0c7b97e1c7de2f6eeb07305db076">ippl::FFT&lt; PrunedCCTransform, ComplexField &gt;</a></li>
 <li>BareField()&#160;:&#160;<a class="el" href="classippl_1_1BareField.html#ac3a4beff3bc00898f213d7c58cae4805">ippl::BareField&lt; T, Dim, ViewArgs &gt;</a></li>
 <li>barrier()&#160;:&#160;<a class="el" href="classippl_1_1mpi_1_1Communicator.html#ae69bfa5c757926d2981da9dae9a64fb5">ippl::mpi::Communicator</a></li>
 <li>BaseManager()&#160;:&#160;<a class="el" href="classippl_1_1BaseManager.html#ad5df595415ff1e726c45b12e374283bb">ippl::BaseManager</a></li>
 <li>BCondBase()&#160;:&#160;<a class="el" href="classippl_1_1detail_1_1BCondBase.html#ab02f1f83e29d14c2709cbe65c524d39e">ippl::detail::BCondBase&lt; Field &gt;</a></li>
 <li>BConds()&#160;:&#160;<a class="el" href="classippl_1_1BConds.html#a96ea71df4358f26e299358c20a726c0d">ippl::BConds&lt; Field, Dim &gt;</a></li>
-<li>begin()&#160;:&#160;<a class="el" href="classippl_1_1Index.html#ab34c11b9bd2c8691c4e013da1d242e58">ippl::Index</a>, <a class="el" href="classippl_1_1NDIndex.html#a122382fabc0dced88dd51e9fffeaf83b">ippl::NDIndex&lt; Dim &gt;</a>, <a class="el" href="classippl_1_1Vector.html#a03520b39989d91577a50a6a012e36fa8">ippl::Vector&lt; T, Dim &gt;</a></li>
-<li>binaryRepartition()&#160;:&#160;<a class="el" href="classippl_1_1OrthogonalRecursiveBisection.html#a57c30bc44ae73bd6b1088a4c12926f7d">ippl::OrthogonalRecursiveBisection&lt; Field, Tp &gt;</a></li>
+<li>begin()&#160;:&#160;<a class="el" href="classippl_1_1Index.html#ab34c11b9bd2c8691c4e013da1d242e58">ippl::Index</a>, <a class="el" href="classippl_1_1NDIndex.html#a122382fabc0dced88dd51e9fffeaf83b">ippl::NDIndex&lt; Dim &gt;</a>, <a class="el" href="classippl_1_1TileSizeTuner.html#a419417d5b898f077760c8d890a287495">ippl::TileSizeTuner&lt; Dim, TileType &gt;</a>, <a class="el" href="classippl_1_1Vector.html#a03520b39989d91577a50a6a012e36fa8">ippl::Vector&lt; T, Dim &gt;</a></li>
+<li>beta()&#160;:&#160;<a class="el" href="classippl_1_1nufft_1_1ESKernel.html#a59a43ccc3fda967af8cd1db043002397">ippl::nufft::ESKernel&lt; T &gt;</a></li>
+<li>binaryRepartition()&#160;:&#160;<a class="el" href="classippl_1_1OrthogonalRecursiveBisection.html#ac127cd4bcdef1e0bbf89b6e29931b21e">ippl::OrthogonalRecursiveBisection&lt; Field, Tp &gt;</a></li>
+<li>binKeys()&#160;:&#160;<a class="el" href="classippl_1_1detail_1_1BinSortBuffers.html#a4038e82aeded5c81551c35804142373d">ippl::detail::BinSortBuffers&lt; MemorySpace &gt;</a></li>
+<li>binOffsetCapacity()&#160;:&#160;<a class="el" href="classippl_1_1detail_1_1BinSortBuffers.html#a6dab3a49e1b523c31d950600139712b3">ippl::detail::BinSortBuffers&lt; MemorySpace &gt;</a></li>
+<li>binOffsets()&#160;:&#160;<a class="el" href="classippl_1_1detail_1_1BinSortBuffers.html#aaccd31e2f5cce7f1c386dc74915c12b5">ippl::detail::BinSortBuffers&lt; MemorySpace &gt;</a></li>
+<li>BinSortBuffers()&#160;:&#160;<a class="el" href="classippl_1_1detail_1_1BinSortBuffers.html#a150624effba40bd8cbff6aca2ff76f0d">ippl::detail::BinSortBuffers&lt; MemorySpace &gt;</a></li>
+<li>BinSortBuffersHolder()&#160;:&#160;<a class="el" href="classippl_1_1detail_1_1BinSortBuffersHolder.html#a91afc1ed97e6ea288ea7417681027faf">ippl::detail::BinSortBuffersHolder&lt; MemorySpace &gt;</a></li>
 <li>BoundaryInfo()&#160;:&#160;<a class="el" href="structippl_1_1FEMVector_1_1BoundaryInfo.html#aa628a7e16d6a39f0ad3c0a057f913b74">ippl::FEMVector&lt; T &gt;::BoundaryInfo</a></li>
+<li>box()&#160;:&#160;<a class="el" href="classippl_1_1nbody_1_1NBodyParticleContainer.html#ab6b8c66156c17a75b36c8d3c7218e8fb">ippl::nbody::NBodyParticleContainer&lt; P, Dim &gt;</a></li>
+<li>bufferData()&#160;:&#160;<a class="el" href="classippl_1_1detail_1_1Archive.html#a53d84346386a0e4e7bdfd7b222e340a7">ippl::detail::Archive&lt; Properties &gt;</a></li>
+<li>bufferSize()&#160;:&#160;<a class="el" href="classippl_1_1detail_1_1Archive.html#af4c29e431471704428f9661e2297631c">ippl::detail::Archive&lt; Properties &gt;</a></li>
 <li>bufferSizeComparator()&#160;:&#160;<a class="el" href="classippl_1_1DefaultBufferHandler.html#a8378cafdc5fc434f7db8d6335321be49">ippl::DefaultBufferHandler&lt; MemorySpace &gt;</a></li>
+<li>BufferView()&#160;:&#160;<a class="el" href="classippl_1_1BufferView.html#abdbfcf9adbeac8dadc71123f645c5d40">ippl::BufferView&lt; T, MemorySpace &gt;</a></li>
 <li>buildCells()&#160;:&#160;<a class="el" href="classippl_1_1ParticleSpatialOverlapLayout.html#ae103def48782551ea15b0c0f5d196ebb">ippl::ParticleSpatialOverlapLayout&lt; T, Dim, Mesh, PositionProperties &gt;</a></li>
-<li>BumponTailInstabilityManager()&#160;:&#160;<a class="el" href="classBumponTailInstabilityManager.html#a39b2f4a1d13ef114f813faf18d101b03">BumponTailInstabilityManager&lt; T, Dim &gt;</a></li>
+<li>Button()&#160;:&#160;<a class="el" href="structippl_1_1Button.html#a891239dba73a3bad103c483838de70c2">ippl::Button</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

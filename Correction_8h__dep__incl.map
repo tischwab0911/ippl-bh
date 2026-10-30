@@ -1,0 +1,13 @@
+<map id="Correction.h" name="Correction.h">
+<area shape="rect" id="node1" title="Deconvolution / pre&#45;correction kernels for the native NUFFT engine." alt="" coords="181,5,272,31"/>
+<area shape="rect" id="node2" href="$NativeNUFFT_8h.html" title=" " alt="" coords="169,79,284,104"/>
+<area shape="rect" id="node3" href="$NUFFT_8h.html" title="Non&#45;uniform FFT specialization (NUFFTransform tag)." alt="" coords="151,152,227,177"/>
+<area shape="rect" id="node4" href="$Transform_8h.html" title="Aggregate include of all IPPL FFT transform specializations." alt="" coords="140,225,231,251"/>
+<area shape="rect" id="node5" href="$FFT_8h.html" title=" " alt="" coords="199,299,255,324"/>
+<area shape="rect" id="node6" href="$FFTOpenPoissonSolver_8h.html" title=" " alt="" coords="141,372,312,397"/>
+<area shape="rect" id="node7" href="$FFTTruncatedGreenPeriodicPoissonSolver_8h.html" title=" " alt="" coords="5,445,192,485"/>
+<area shape="rect" id="node11" href="$FFTPeriodicPoissonSolver_8h.html" title=" " alt="" coords="267,453,453,478"/>
+<area shape="rect" id="node8" href="$datatypes_8h.html" title=" " alt="" coords="185,533,273,559"/>
+<area shape="rect" id="node9" href="$FieldSolverBase_8h.html" title=" " alt="" coords="166,607,293,632"/>
+<area shape="rect" id="node10" href="$PicManager_8h.html" title=" " alt="" coords="179,680,280,705"/>
+</map>

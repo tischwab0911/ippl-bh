@@ -28,7 +28,7 @@ MathJax.Hub.Config({
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">IPPL (Independent Parallel Particle Layer)
+   <div id="projectname">IPPL (Independent Parallel Particle Layer)<span id="projectnumber">&#160;3.4.0</span>
    </div>
    <div id="projectbrief">IPPL</div>
   </td>
@@ -126,7 +126,7 @@ $(function() {
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="classippl_1_1FFTPeriodicPoissonSolver.html#ad228685eeb7a00b18025c6e3437a7c34">   41</a></span>        <a class="code hl_function" href="classippl_1_1FFTPeriodicPoissonSolver.html#ad228685eeb7a00b18025c6e3437a7c34">FFTPeriodicPoissonSolver</a>()</div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>            : <a class="code hl_class" href="classippl_1_1Poisson.html">Base</a>() {</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>            <span class="keyword">using </span><a class="code hl_typedef" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a> = <span class="keyword">typename</span> FieldLHS::value_type::value_type;</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>            <span class="keyword">using </span>T = <span class="keyword">typename</span> FieldLHS::value_type::value_type;</div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>            <span class="keyword">static_assert</span>(std::is_floating_point&lt;T&gt;::value, <span class="stringliteral">&quot;Not a floating point type&quot;</span>);</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>            <a class="code hl_function" href="classippl_1_1FFTPeriodicPoissonSolver.html#a10bb7ff4e0958b23c147802c6275e412">setDefaultParameters</a>();</div>
@@ -134,7 +134,7 @@ $(function() {
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno"><a class="line" href="classippl_1_1FFTPeriodicPoissonSolver.html#aa9d457fb1974fc00e90d1b3f55aad3c2">   49</a></span>        <a class="code hl_function" href="classippl_1_1FFTPeriodicPoissonSolver.html#aa9d457fb1974fc00e90d1b3f55aad3c2">FFTPeriodicPoissonSolver</a>(<a class="code hl_typedef" href="classippl_1_1FFTPeriodicPoissonSolver.html#afb9803ccc30ca00408107714a1f7ab41">lhs_type</a>&amp; lhs, <a class="code hl_typedef" href="classippl_1_1Poisson.html#a96a91a7da45bb0d881ec749ddfef38e3">rhs_type</a>&amp; rhs)</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>            : <a class="code hl_class" href="classippl_1_1Poisson.html">Base</a>(lhs, rhs) {</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>            <span class="keyword">using </span><a class="code hl_typedef" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a> = <span class="keyword">typename</span> FieldLHS::value_type::value_type;</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>            <span class="keyword">using </span>T = <span class="keyword">typename</span> FieldLHS::value_type::value_type;</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>            <span class="keyword">static_assert</span>(std::is_floating_point&lt;T&gt;::value, <span class="stringliteral">&quot;Not a floating point type&quot;</span>);</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>            <a class="code hl_function" href="classippl_1_1FFTPeriodicPoissonSolver.html#a10bb7ff4e0958b23c147802c6275e412">setDefaultParameters</a>();</div>
@@ -187,7 +187,6 @@ $(function() {
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span> </div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span><span class="preprocessor">#include &quot;<a class="code" href="FFTPeriodicPoissonSolver_8hpp.html">PoissonSolvers/FFTPeriodicPoissonSolver.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span><span class="preprocessor">#endif</span></div>
-<div class="ttc" id="aBumponTailInstability_8cpp_html_a6b2d038ea9c8d2651eecffe0e28b7ebb"><div class="ttname"><a href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a></div><div class="ttdeci">double T</div><div class="ttdef"><b>Definition:</b> BumponTailInstability.cpp:23</div></div>
 <div class="ttc" id="aFFTPeriodicPoissonSolver_8hpp_html"><div class="ttname"><a href="FFTPeriodicPoissonSolver_8hpp.html">FFTPeriodicPoissonSolver.hpp</a></div></div>
 <div class="ttc" id="aFFT_8h_html"><div class="ttname"><a href="FFT_8h.html">FFT.h</a></div></div>
 <div class="ttc" id="aFieldLayout_8h_html"><div class="ttname"><a href="FieldLayout_8h.html">FieldLayout.h</a></div></div>
@@ -217,8 +216,8 @@ $(function() {
 <div class="ttc" id="aclassippl_1_1FFTPeriodicPoissonSolver_html_ae632cdffcab4ee203762308602d5d70a"><div class="ttname"><a href="classippl_1_1FFTPeriodicPoissonSolver.html#ae632cdffcab4ee203762308602d5d70a">ippl::FFTPeriodicPoissonSolver::Dim</a></div><div class="ttdeci">static constexpr unsigned Dim</div><div class="ttdef"><b>Definition:</b> FFTPeriodicPoissonSolver.h:24</div></div>
 <div class="ttc" id="aclassippl_1_1FFTPeriodicPoissonSolver_html_aec1c937f6c2de7ffc3e9e0d54b9bb83c"><div class="ttname"><a href="classippl_1_1FFTPeriodicPoissonSolver.html#aec1c937f6c2de7ffc3e9e0d54b9bb83c">ippl::FFTPeriodicPoissonSolver::fieldComplex_m</a></div><div class="ttdeci">CxField_t fieldComplex_m</div><div class="ttdef"><b>Definition:</b> FFTPeriodicPoissonSolver.h:67</div></div>
 <div class="ttc" id="aclassippl_1_1FFTPeriodicPoissonSolver_html_afb9803ccc30ca00408107714a1f7ab41"><div class="ttname"><a href="classippl_1_1FFTPeriodicPoissonSolver.html#afb9803ccc30ca00408107714a1f7ab41">ippl::FFTPeriodicPoissonSolver::lhs_type</a></div><div class="ttdeci">FieldLHS lhs_type</div><div class="ttdef"><b>Definition:</b> Poisson.h:24</div></div>
-<div class="ttc" id="aclassippl_1_1FFT_html"><div class="ttname"><a href="classippl_1_1FFT.html">ippl::FFT</a></div><div class="ttdef"><b>Definition:</b> FFT.h:185</div></div>
-<div class="ttc" id="aclassippl_1_1FieldLayout_html"><div class="ttname"><a href="classippl_1_1FieldLayout.html">ippl::FieldLayout</a></div><div class="ttdef"><b>Definition:</b> FieldLayout.h:166</div></div>
+<div class="ttc" id="aclassippl_1_1FFT_html"><div class="ttname"><a href="classippl_1_1FFT.html">ippl::FFT</a></div><div class="ttdoc">Primary FFT template; specialized per transform tag in FFT/Transform/*.</div><div class="ttdef"><b>Definition:</b> Traits.h:77</div></div>
+<div class="ttc" id="aclassippl_1_1FieldLayout_html"><div class="ttname"><a href="classippl_1_1FieldLayout.html">ippl::FieldLayout</a></div><div class="ttdef"><b>Definition:</b> FieldLayout.h:165</div></div>
 <div class="ttc" id="aclassippl_1_1NDIndex_html"><div class="ttname"><a href="classippl_1_1NDIndex.html">ippl::NDIndex</a></div><div class="ttdef"><b>Definition:</b> NDIndex.h:21</div></div>
 <div class="ttc" id="aclassippl_1_1ParameterList_html_ab4b572b0db6bad6f631b23320a8f4722"><div class="ttname"><a href="classippl_1_1ParameterList.html#ab4b572b0db6bad6f631b23320a8f4722">ippl::ParameterList::add</a></div><div class="ttdeci">void add(const std::string &amp;key, const T &amp;value)</div><div class="ttdef"><b>Definition:</b> ParameterList.h:44</div></div>
 <div class="ttc" id="aclassippl_1_1Poisson_html"><div class="ttname"><a href="classippl_1_1Poisson.html">ippl::Poisson</a></div><div class="ttdef"><b>Definition:</b> Poisson.h:16</div></div>
@@ -226,11 +225,11 @@ $(function() {
 <div class="ttc" id="aclassippl_1_1Poisson_html_a96a91a7da45bb0d881ec749ddfef38e3"><div class="ttname"><a href="classippl_1_1Poisson.html#a96a91a7da45bb0d881ec749ddfef38e3">ippl::Poisson::rhs_type</a></div><div class="ttdeci">FieldRHS rhs_type</div><div class="ttdef"><b>Definition:</b> Poisson.h:25</div></div>
 <div class="ttc" id="aclassippl_1_1Poisson_html_afb9803ccc30ca00408107714a1f7ab41"><div class="ttname"><a href="classippl_1_1Poisson.html#afb9803ccc30ca00408107714a1f7ab41">ippl::Poisson::lhs_type</a></div><div class="ttdeci">FieldLHS lhs_type</div><div class="ttdef"><b>Definition:</b> Poisson.h:24</div></div>
 <div class="ttc" id="aclassippl_1_1Vector_html"><div class="ttname"><a href="classippl_1_1Vector.html">ippl::Vector&lt; Trhs, Dim &gt;</a></div></div>
-<div class="ttc" id="anamespaceippl_html"><div class="ttname"><a href="namespaceippl.html">ippl</a></div><div class="ttdef"><b>Definition:</b> Archive.h:20</div></div>
-<div class="ttc" id="anamespaceippl_html_a235aa4bee4fa4bbd4b67985b87347f5ba66ad0e607d1643061d2c55d95e0a216b"><div class="ttname"><a href="namespaceippl.html#a235aa4bee4fa4bbd4b67985b87347f5ba66ad0e607d1643061d2c55d95e0a216b">ippl::p2p_pl</a></div><div class="ttdeci">@ p2p_pl</div><div class="ttdef"><b>Definition:</b> FFT.h:59</div></div>
-<div class="ttc" id="anamespaceippl_html_a235aa4bee4fa4bbd4b67985b87347f5ba759a047688099b9d2d948553ea3e6c71"><div class="ttname"><a href="namespaceippl.html#a235aa4bee4fa4bbd4b67985b87347f5ba759a047688099b9d2d948553ea3e6c71">ippl::a2av</a></div><div class="ttdeci">@ a2av</div><div class="ttdef"><b>Definition:</b> FFT.h:56</div></div>
-<div class="ttc" id="anamespaceippl_html_a235aa4bee4fa4bbd4b67985b87347f5bab79c9c6432e3cd8548b3dafc6a7a1701"><div class="ttname"><a href="namespaceippl.html#a235aa4bee4fa4bbd4b67985b87347f5bab79c9c6432e3cd8548b3dafc6a7a1701">ippl::p2p</a></div><div class="ttdeci">@ p2p</div><div class="ttdef"><b>Definition:</b> FFT.h:58</div></div>
-<div class="ttc" id="anamespaceippl_html_a235aa4bee4fa4bbd4b67985b87347f5bafd55c19fc508f967a7a635c99016c01d"><div class="ttname"><a href="namespaceippl.html#a235aa4bee4fa4bbd4b67985b87347f5bafd55c19fc508f967a7a635c99016c01d">ippl::a2a</a></div><div class="ttdeci">@ a2a</div><div class="ttdef"><b>Definition:</b> FFT.h:57</div></div>
+<div class="ttc" id="anamespaceippl_html"><div class="ttname"><a href="namespaceippl.html">ippl</a></div><div class="ttdef"><b>Definition:</b> Archive.h:29</div></div>
+<div class="ttc" id="anamespaceippl_html_a235aa4bee4fa4bbd4b67985b87347f5ba66ad0e607d1643061d2c55d95e0a216b"><div class="ttname"><a href="namespaceippl.html#a235aa4bee4fa4bbd4b67985b87347f5ba66ad0e607d1643061d2c55d95e0a216b">ippl::p2p_pl</a></div><div class="ttdeci">@ p2p_pl</div><div class="ttdoc">Point-to-point pipelined.</div><div class="ttdef"><b>Definition:</b> Traits.h:53</div></div>
+<div class="ttc" id="anamespaceippl_html_a235aa4bee4fa4bbd4b67985b87347f5ba759a047688099b9d2d948553ea3e6c71"><div class="ttname"><a href="namespaceippl.html#a235aa4bee4fa4bbd4b67985b87347f5ba759a047688099b9d2d948553ea3e6c71">ippl::a2av</a></div><div class="ttdeci">@ a2av</div><div class="ttdoc">MPI_Alltoallv.</div><div class="ttdef"><b>Definition:</b> Traits.h:51</div></div>
+<div class="ttc" id="anamespaceippl_html_a235aa4bee4fa4bbd4b67985b87347f5bab79c9c6432e3cd8548b3dafc6a7a1701"><div class="ttname"><a href="namespaceippl.html#a235aa4bee4fa4bbd4b67985b87347f5bab79c9c6432e3cd8548b3dafc6a7a1701">ippl::p2p</a></div><div class="ttdeci">@ p2p</div><div class="ttdoc">Point-to-point.</div><div class="ttdef"><b>Definition:</b> Traits.h:52</div></div>
+<div class="ttc" id="anamespaceippl_html_a235aa4bee4fa4bbd4b67985b87347f5bafd55c19fc508f967a7a635c99016c01d"><div class="ttname"><a href="namespaceippl.html#a235aa4bee4fa4bbd4b67985b87347f5bafd55c19fc508f967a7a635c99016c01d">ippl::a2a</a></div><div class="ttdeci">@ a2a</div><div class="ttdoc">MPI_Alltoall.</div><div class="ttdef"><b>Definition:</b> Traits.h:50</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

@@ -1,0 +1,5 @@
+<map id="GpuTimer.hpp" name="GpuTimer.hpp">
+<area shape="rect" id="node1" title="Small wrapper for IPPL&#45;Style scoped timer for NBody simulations." alt="" coords="97,5,200,31"/>
+<area shape="rect" id="node2" href="$NBodyManager_8hpp.html" title="A base class to derive simulation managers for NBody simulations." alt="" coords="5,79,140,104"/>
+<area shape="rect" id="node3" href="$NBodySolver_8cpp.html" title="BH solver for coulomb interactions in NBody simulations." alt="" coords="165,79,287,104"/>
+</map>

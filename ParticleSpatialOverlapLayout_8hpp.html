@@ -28,7 +28,7 @@ MathJax.Hub.Config({
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">IPPL (Independent Parallel Particle Layer)
+   <div id="projectname">IPPL (Independent Parallel Particle Layer)<span id="projectnumber">&#160;3.4.0</span>
    </div>
    <div id="projectbrief">IPPL</div>
   </td>
@@ -82,71 +82,50 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">ParticleSpatialOverlapLayout.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;numeric&gt;</code><br />
+<div class="textblock"><code>#include &lt;Kokkos_MathematicalFunctions.hpp&gt;</code><br />
+<code>#include &lt;algorithm&gt;</code><br />
+<code>#include &lt;cmath&gt;</code><br />
+<code>#include &lt;limits&gt;</code><br />
+<code>#include &lt;numeric&gt;</code><br />
+<code>#include &lt;sstream&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
+<code>#include &quot;<a class="el" href="IpplException_8h_source.html">Utility/IpplException.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="IpplTimings_8h_source.html">Utility/IpplTimings.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="ParticleContainer_8hpp_source.html">../../alpine/ParticleContainer.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="Window_8h_source.html">Communicate/Window.h</a>&quot;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for ParticleSpatialOverlapLayout.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="ParticleSpatialOverlapLayout_8hpp__incl.png" border="0" usemap="#aParticleSpatialOverlapLayout_8hpp" alt=""/></div>
 <map name="aParticleSpatialOverlapLayout_8hpp" id="aParticleSpatialOverlapLayout_8hpp">
-<area shape="rect" title=" " alt="" coords="309,5,524,31"/>
-<area shape="rect" title=" " alt="" coords="185,79,253,104"/>
-<area shape="rect" title=" " alt="" coords="665,460,723,485"/>
-<area shape="rect" href="IpplTimings_8h.html" title=" " alt="" coords="303,379,439,405"/>
-<area shape="rect" href="ParticleContainer_8hpp.html" title=" " alt="" coords="1107,79,1310,104"/>
-<area shape="rect" href="Window_8h.html" title=" " alt="" coords="335,79,498,104"/>
-<area shape="rect" title=" " alt="" coords="26,533,103,559"/>
-<area shape="rect" title=" " alt="" coords="329,460,382,485"/>
-<area shape="rect" title=" " alt="" coords="1348,460,1395,485"/>
-<area shape="rect" title=" " alt="" coords="407,460,461,485"/>
-<area shape="rect" title=" " alt="" coords="549,533,604,559"/>
-<area shape="rect" href="PAssert_8h.html" title=" " alt="" coords="188,460,304,485"/>
-<area shape="rect" href="Timer_8h.html" title=" " alt="" coords="537,460,640,485"/>
-<area shape="rect" href="my__auto__ptr_8h.html" title=" " alt="" coords="24,460,164,485"/>
-<area shape="rect" title=" " alt="" coords="207,533,285,559"/>
-<area shape="rect" href="IpplInfo_8h.html" title=" " alt="" coords="705,533,817,559"/>
-<area shape="rect" title=" " alt="" coords="1389,533,1450,559"/>
-<area shape="rect" title=" " alt="" coords="1703,533,1771,559"/>
-<area shape="rect" href="BaseManager_8h.html" title=" " alt="" coords="1125,152,1292,177"/>
-<area shape="rect" href="Ippl_8h.html" title=" " alt="" coords="1182,225,1235,251"/>
-<area shape="rect" title=" " alt="" coords="579,379,651,405"/>
-<area shape="rect" href="IpplTypes_8h.html" title=" " alt="" coords="2729,607,2856,632"/>
-<area shape="rect" href="Inform_8h.html" title=" " alt="" coords="702,299,809,324"/>
-<area shape="rect" href="ParallelDispatch_8h.html" title=" " alt="" coords="859,379,1022,405"/>
-<area shape="rect" href="Communicator_8h.html" title=" " alt="" coords="1806,299,2006,324"/>
-<area shape="rect" href="Environment_8h.html" title=" " alt="" coords="3052,299,3240,324"/>
-<area shape="rect" href="IpplCore_8h.html" title=" " alt="" coords="1243,460,1323,485"/>
-<area shape="rect" title=" " alt="" coords="2760,680,2825,705"/>
-<area shape="rect" title=" " alt="" coords="675,379,742,405"/>
-<area shape="rect" title=" " alt="" coords="766,379,835,405"/>
-<area shape="rect" title=" " alt="" coords="1044,460,1168,485"/>
-<area shape="rect" title=" " alt="" coords="918,460,969,485"/>
-<area shape="rect" href="Vector_8h.html" title=" " alt="" coords="1229,607,1338,632"/>
-<area shape="rect" href="IpplException_8h.html" title=" " alt="" coords="747,460,894,485"/>
-<area shape="rect" title=" " alt="" coords="2838,533,2891,559"/>
-<area shape="rect" href="BufferHandler_8h.html" title=" " alt="" coords="1707,460,1902,485"/>
-<area shape="rect" href="Archive_8h.html" title=" " alt="" coords="2227,533,2387,559"/>
-<area shape="rect" href="LoggingBufferHandler_8h.html" title=" " alt="" coords="1446,372,1633,412"/>
-<area shape="rect" href="Request_8h.html" title=" " alt="" coords="2843,379,3007,405"/>
-<area shape="rect" href="Status_8h.html" title=" " alt="" coords="2787,460,2942,485"/>
-<area shape="rect" title=" " alt="" coords="1759,379,1819,405"/>
-<area shape="rect" title=" " alt="" coords="1843,379,1903,405"/>
-<area shape="rect" href="TypeUtils_8h.html" title=" " alt="" coords="1047,379,1171,405"/>
-<area shape="rect" href="TagMaker_8h.html" title=" " alt="" coords="1247,379,1421,405"/>
-<area shape="rect" href="Tags_8h.html" title=" " alt="" coords="1979,379,2124,405"/>
-<area shape="rect" href="Collectives_8hpp.html" title=" " alt="" coords="2149,379,2343,405"/>
-<area shape="rect" href="PointToPoint_8hpp.html" title=" " alt="" coords="2367,379,2573,405"/>
-<area shape="rect" href="Buffers_8hpp.html" title=" " alt="" coords="2597,379,2767,405"/>
-<area shape="rect" title=" " alt="" coords="441,152,504,177"/>
-<area shape="rect" href="Window_8hpp.html" title=" " alt="" coords="329,225,505,251"/>
+<area shape="rect" title=" " alt="" coords="451,5,666,31"/>
+<area shape="rect" title=" " alt="" coords="5,79,237,104"/>
+<area shape="rect" title=" " alt="" coords="261,79,336,104"/>
+<area shape="rect" title=" " alt="" coords="360,79,419,104"/>
+<area shape="rect" title=" " alt="" coords="63,152,116,177"/>
+<area shape="rect" title=" " alt="" coords="1145,79,1213,104"/>
+<area shape="rect" title=" " alt="" coords="1237,79,1307,104"/>
+<area shape="rect" title=" " alt="" coords="140,152,199,177"/>
+<area shape="rect" href="IpplException_8h.html" title=" " alt="" coords="921,225,1068,251"/>
+<area shape="rect" href="IpplTimings_8h.html" title=" " alt="" coords="544,79,680,104"/>
+<area shape="rect" href="Window_8h.html" title=" " alt="" coords="957,79,1120,104"/>
+<area shape="rect" title=" " alt="" coords="857,299,911,324"/>
+<area shape="rect" title=" " alt="" coords="479,225,556,251"/>
+<area shape="rect" title=" " alt="" coords="514,152,561,177"/>
+<area shape="rect" title=" " alt="" coords="585,152,639,177"/>
+<area shape="rect" href="PAssert_8h.html" title=" " alt="" coords="715,152,831,177"/>
+<area shape="rect" href="Timer_8h.html" title=" " alt="" coords="387,152,490,177"/>
+<area shape="rect" href="my__auto__ptr_8h.html" title=" " alt="" coords="223,152,363,177"/>
+<area shape="rect" title=" " alt="" coords="631,225,710,251"/>
+<area shape="rect" href="IpplInfo_8h.html" title=" " alt="" coords="735,225,847,251"/>
+<area shape="rect" title=" " alt="" coords="393,225,455,251"/>
+<area shape="rect" title=" " alt="" coords="1158,152,1221,177"/>
+<area shape="rect" href="Window_8hpp.html" title=" " alt="" coords="957,152,1133,177"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -161,6 +140,11 @@ This graph shows which files directly or indirectly include this file:</div>
 </div>
 <p><a href="ParticleSpatialOverlapLayout_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structippl_1_1increment__type.html">ippl::increment_type</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
 Namespaces</h2></td></tr>
 <tr class="memitem:namespaceippl"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceippl.html">ippl</a></td></tr>
@@ -170,11 +154,11 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a673567cd04199383da3999408196860c"><td class="memTemplParams" colspan="2">template&lt;typename <a class="el" href="classParticleContainer.html">ParticleContainer</a> , typename index_type &gt; </td></tr>
-<tr class="memitem:a673567cd04199383da3999408196860c"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceippl_1_1detail.html#a673567cd04199383da3999408196860c">ippl::detail::copyAttributes</a> (<a class="el" href="classParticleContainer.html">ParticleContainer</a> &amp;pc, const index_type &amp;boundaryIndices)</td></tr>
+<tr class="memitem:a673567cd04199383da3999408196860c"><td class="memTemplParams" colspan="2">template&lt;typename ParticleContainer , typename index_type &gt; </td></tr>
+<tr class="memitem:a673567cd04199383da3999408196860c"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceippl_1_1detail.html#a673567cd04199383da3999408196860c">ippl::detail::copyAttributes</a> (ParticleContainer &amp;pc, const index_type &amp;boundaryIndices)</td></tr>
 <tr class="separator:a673567cd04199383da3999408196860c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a966803e70c2d0f3252710d99cc4bf00a"><td class="memTemplParams" colspan="2">template&lt;typename <a class="el" href="classParticleContainer.html">ParticleContainer</a> , typename index_type &gt; </td></tr>
-<tr class="memitem:a966803e70c2d0f3252710d99cc4bf00a"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceippl_1_1detail.html#a966803e70c2d0f3252710d99cc4bf00a">ippl::detail::sortParticles</a> (<a class="el" href="classParticleContainer.html">ParticleContainer</a> &amp;pc, const index_type &amp;newIndex)</td></tr>
+<tr class="memitem:a966803e70c2d0f3252710d99cc4bf00a"><td class="memTemplParams" colspan="2">template&lt;typename ParticleContainer , typename index_type &gt; </td></tr>
+<tr class="memitem:a966803e70c2d0f3252710d99cc4bf00a"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceippl_1_1detail.html#a966803e70c2d0f3252710d99cc4bf00a">ippl::detail::sortParticles</a> (ParticleContainer &amp;pc, const index_type &amp;newIndex)</td></tr>
 <tr class="separator:a966803e70c2d0f3252710d99cc4bf00a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->

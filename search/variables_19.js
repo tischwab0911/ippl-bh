@@ -1,5 +1,10 @@
 var searchData=
 [
-  ['zeta_5fm_0',['zeta_m',['../structippl_1_1polynomial__newton__preconditioner.html#aaf265c6fa9652f11706c68f20bf364bd',1,'ippl::polynomial_newton_preconditioner::zeta_m()'],['../structippl_1_1polynomial__chebyshev__preconditioner.html#aad16ea227a3fcf95b22430922525acb7',1,'ippl::polynomial_chebyshev_preconditioner::zeta_m()']]],
-  ['zvector_5fm_1',['zvector_m',['../structippl_1_1detail_1_1meta__curl.html#a2ef24c16a78c5887647b34b36ba74e15',1,'ippl::detail::meta_curl']]]
+  ['y_0',['y',['../structippl_1_1nbody_1_1Triple.html#aa0c2aaf8fb91017e7a1c9dcbfc8f1073',1,'ippl::nbody::Triple::y()'],['../classippl_1_1nbody_1_1NBodyParticleContainer.html#a72e192ea79039807fc8dbce25df09342',1,'ippl::nbody::NBodyParticleContainer::y()']]],
+  ['y_5f_1',['y_',['../classippl_1_1detail_1_1GPModel.html#a4403139cbc8e478db34ce6220dde4d8c',1,'ippl::detail::GPModel']]],
+  ['y_5fmean_5f_2',['y_mean_',['../classippl_1_1detail_1_1GPModel.html#acffd8d0fa36b4e9cf9f02adb8d49b33e',1,'ippl::detail::GPModel']]],
+  ['y_5fnorm_5f_3',['y_norm_',['../classippl_1_1detail_1_1GPModel.html#a394465ffadcb5a041b281bb79d766f57',1,'ippl::detail::GPModel']]],
+  ['y_5fstd_5f_4',['y_std_',['../classippl_1_1detail_1_1GPModel.html#a6d48c4a0c7300e373fe9c5752f2dc2af',1,'ippl::detail::GPModel']]],
+  ['y_5fvar_5f_5',['y_var_',['../classippl_1_1detail_1_1GPModel.html#af3c809c3bda969cce423fb6d31c46ef2',1,'ippl::detail::GPModel']]],
+  ['yvector_5fm_6',['yvector_m',['../structippl_1_1detail_1_1meta__curl.html#af01304d5e62b3163d161be41b89ab8e1',1,'ippl::detail::meta_curl']]]
 ];

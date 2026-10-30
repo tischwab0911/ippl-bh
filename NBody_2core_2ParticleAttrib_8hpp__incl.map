@@ -1,0 +1,12 @@
+<map id="ParticleAttrib.hpp" name="ParticleAttrib.hpp">
+<area shape="rect" id="node1" title="minimal particle attribute class to mirror class hierarchy" alt="" coords="506,5,627,31"/>
+<area shape="rect" id="node2" href="$Accelerator_8hpp.html" title="Realize the configure&#45;time GPU/CPU choice." alt="" coords="375,86,559,111"/>
+<area shape="rect" id="node9" href="$ParticleAttribBase_8hpp.html" title="Kokkos&#45;free particle attribute base class for NBody." alt="" coords="731,79,901,119"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,174,88,199"/>
+<area shape="rect" id="node4" title=" " alt="" coords="112,174,171,199"/>
+<area shape="rect" id="node5" title=" " alt="" coords="195,174,375,199"/>
+<area shape="rect" id="node6" title=" " alt="" coords="399,167,534,207"/>
+<area shape="rect" id="node7" title=" " alt="" coords="559,174,703,199"/>
+<area shape="rect" id="node8" title=" " alt="" coords="727,167,908,207"/>
+<area shape="rect" id="node10" title=" " alt="" coords="933,174,998,199"/>
+</map>

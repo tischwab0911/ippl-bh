@@ -28,7 +28,7 @@ MathJax.Hub.Config({
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">IPPL (Independent Parallel Particle Layer)
+   <div id="projectname">IPPL (Independent Parallel Particle Layer)<span id="projectnumber">&#160;3.4.0</span>
    </div>
    <div id="projectbrief">IPPL</div>
   </td>
@@ -99,13 +99,12 @@ Inheritance diagram for ippl::Quadrature&lt; T, NumNodes1D, ElementType &gt;:</d
 <div class="dyncontent">
 <div class="center"><img src="classippl_1_1Quadrature__inherit__graph.png" border="0" usemap="#aippl_1_1Quadrature_3_01T_00_01NumNodes1D_00_01ElementType_01_4_inherit__map" alt="Inheritance graph"/></div>
 <map name="aippl_1_1Quadrature_3_01T_00_01NumNodes1D_00_01ElementType_01_4_inherit__map" id="aippl_1_1Quadrature_3_01T_00_01NumNodes1D_00_01ElementType_01_4_inherit__map">
-<area shape="rect" title="This is the base class for all quadrature rules." alt="" coords="345,5,545,324"/>
-<area shape="rect" href="classippl_1_1GaussJacobiQuadrature.html" title=" " alt="" coords="5,372,204,544"/>
-<area shape="rect" href="classippl_1_1GaussJacobiQuadrature.html" title=" " alt="" coords="228,372,427,544"/>
-<area shape="rect" href="classippl_1_1GaussJacobiQuadrature.html" title="This is class represents the Gauss&#45;Jacobi quadrature rule on a reference element." alt="" coords="451,372,673,544"/>
-<area shape="rect" href="classippl_1_1MidpointQuadrature.html" title="This is a class representing the midpoint quadrature rule." alt="" coords="697,416,920,500"/>
-<area shape="rect" href="classippl_1_1ChebyshevGaussQuadrature.html" title="This is class represents the Chebyshev&#45;Gauss quadrature rule. It is a special case of the Gauss&#45;Jacob..." alt="" coords="327,592,549,661"/>
-<area shape="rect" href="classippl_1_1GaussLegendreQuadrature.html" title="This is class represents the Gauss&#45;Legendre quadrature rule. It is a special case of the Gauss&#45;Jacobi..." alt="" coords="573,592,796,661"/>
+<area shape="rect" title="This is the base class for all quadrature rules." alt="" coords="481,5,681,339"/>
+<area shape="rect" href="classippl_1_1GaussLegendreQuadrature.html" title=" " alt="" coords="5,387,213,471"/>
+<area shape="rect" href="classippl_1_1GaussLegendreQuadrature.html" title=" " alt="" coords="237,387,445,471"/>
+<area shape="rect" href="classippl_1_1GaussLegendreQuadrature.html" title="Gauss&#45;Legendre quadrature (Gauss&#45;Jacobi with alpha = beta = 0) on a reference element." alt="" coords="470,387,693,471"/>
+<area shape="rect" href="classippl_1_1GaussLobattoQuadrature.html" title="Gauss&#45;Lobatto&#45;Legendre quadrature on a reference element." alt="" coords="717,387,939,471"/>
+<area shape="rect" href="classippl_1_1MidpointQuadrature.html" title="This is a class representing the midpoint quadrature rule." alt="" coords="963,387,1186,471"/>
 </map>
 </div>
 <div class="dynheader">
@@ -113,7 +112,7 @@ Collaboration diagram for ippl::Quadrature&lt; T, NumNodes1D, ElementType &gt;:<
 <div class="dyncontent">
 <div class="center"><img src="classippl_1_1Quadrature__coll__graph.png" border="0" usemap="#aippl_1_1Quadrature_3_01T_00_01NumNodes1D_00_01ElementType_01_4_coll__map" alt="Collaboration graph"/></div>
 <map name="aippl_1_1Quadrature_3_01T_00_01NumNodes1D_00_01ElementType_01_4_coll__map" id="aippl_1_1Quadrature_3_01T_00_01NumNodes1D_00_01ElementType_01_4_coll__map">
-<area shape="rect" title="This is the base class for all quadrature rules." alt="" coords="10,476,210,765"/>
+<area shape="rect" title="This is the base class for all quadrature rules." alt="" coords="10,476,210,780"/>
 <area shape="rect" href="classippl_1_1Vector.html" title=" " alt="" coords="5,153,215,384"/>
 <area shape="rect" href="structippl_1_1detail_1_1Expression.html" title=" " alt="" coords="24,5,196,104"/>
 </map>
@@ -121,25 +120,28 @@ Collaboration diagram for ippl::Quadrature&lt; T, NumNodes1D, ElementType &gt;:<
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ad0cdd78559face6a747400440d2c6fac"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classippl_1_1Quadrature.html#ad0cdd78559face6a747400440d2c6fac">Quadrature</a> (const ElementType &amp;ref_element)</td></tr>
-<tr class="memdesc:ad0cdd78559face6a747400440d2c6fac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a new <a class="el" href="classippl_1_1Quadrature.html" title="This is the base class for all quadrature rules.">Quadrature</a> object.  <a href="classippl_1_1Quadrature.html#ad0cdd78559face6a747400440d2c6fac">More...</a><br /></td></tr>
-<tr class="separator:ad0cdd78559face6a747400440d2c6fac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f0a2068183840bedd11e9ab626e4846"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classippl_1_1Quadrature.html#a1f0a2068183840bedd11e9ab626e4846">Quadrature</a> (const ElementType &amp;ref_element, unsigned degree, T a, T b)</td></tr>
+<tr class="memdesc:a1f0a2068183840bedd11e9ab626e4846"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a new <a class="el" href="classippl_1_1Quadrature.html" title="This is the base class for all quadrature rules.">Quadrature</a> object.  <a href="classippl_1_1Quadrature.html#a1f0a2068183840bedd11e9ab626e4846">More...</a><br /></td></tr>
+<tr class="separator:a1f0a2068183840bedd11e9ab626e4846"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a147b453dcc7f5a829370b681d641add6"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classippl_1_1Quadrature.html#a147b453dcc7f5a829370b681d641add6">~Quadrature</a> ()=default</td></tr>
+<tr class="memdesc:a147b453dcc7f5a829370b681d641add6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Virtual destructor so derived rules can be destroyed through a Quadrature*.  <a href="classippl_1_1Quadrature.html#a147b453dcc7f5a829370b681d641add6">More...</a><br /></td></tr>
+<tr class="separator:a147b453dcc7f5a829370b681d641add6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa58f4368884b05b3b620d630a0c6e5f3"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classippl_1_1Quadrature.html#aa58f4368884b05b3b620d630a0c6e5f3">getOrder</a> () const</td></tr>
 <tr class="memdesc:aa58f4368884b05b3b620d630a0c6e5f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the order of the quadrature rule. (order = degree + 1)  <a href="classippl_1_1Quadrature.html#aa58f4368884b05b3b620d630a0c6e5f3">More...</a><br /></td></tr>
 <tr class="separator:aa58f4368884b05b3b620d630a0c6e5f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8925947d1ede8f5ea7ecfa5d56c5e410"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classippl_1_1Quadrature.html#a8925947d1ede8f5ea7ecfa5d56c5e410">getDegree</a> () const</td></tr>
 <tr class="memdesc:a8925947d1ede8f5ea7ecfa5d56c5e410"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the degree of exactness of the quadrature rule.  <a href="classippl_1_1Quadrature.html#a8925947d1ede8f5ea7ecfa5d56c5e410">More...</a><br /></td></tr>
 <tr class="separator:a8925947d1ede8f5ea7ecfa5d56c5e410"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad1dd5017241c27e407f7c991599e176a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classippl_1_1Vector.html">Vector</a>&lt; <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a>, <a class="el" href="classippl_1_1Quadrature.html#a64c0d6f641ac0f226a89697a312891a9">numElementNodes</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classippl_1_1Quadrature.html#ad1dd5017241c27e407f7c991599e176a">getWeightsForRefElement</a> () const</td></tr>
+<tr class="memitem:ad1dd5017241c27e407f7c991599e176a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classippl_1_1Vector.html">Vector</a>&lt; T, <a class="el" href="classippl_1_1Quadrature.html#a64c0d6f641ac0f226a89697a312891a9">numElementNodes</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classippl_1_1Quadrature.html#ad1dd5017241c27e407f7c991599e176a">getWeightsForRefElement</a> () const</td></tr>
 <tr class="memdesc:ad1dd5017241c27e407f7c991599e176a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the quadrature weights for the reference element.  <a href="classippl_1_1Quadrature.html#ad1dd5017241c27e407f7c991599e176a">More...</a><br /></td></tr>
 <tr class="separator:ad1dd5017241c27e407f7c991599e176a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a88303363e57088e2740d2f7e8c7db458"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classippl_1_1Vector.html">Vector</a>&lt; <a class="el" href="classippl_1_1Vector.html">Vector</a>&lt; <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a>, <a class="el" href="classippl_1_1Quadrature.html#a1ffa01d8236b7122a12821937c28f02b">dim</a> &gt;, <a class="el" href="classippl_1_1Quadrature.html#a64c0d6f641ac0f226a89697a312891a9">numElementNodes</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classippl_1_1Quadrature.html#a88303363e57088e2740d2f7e8c7db458">getIntegrationNodesForRefElement</a> () const</td></tr>
+<tr class="memitem:a88303363e57088e2740d2f7e8c7db458"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classippl_1_1Vector.html">Vector</a>&lt; <a class="el" href="classippl_1_1Vector.html">Vector</a>&lt; T, <a class="el" href="classippl_1_1Quadrature.html#a1ffa01d8236b7122a12821937c28f02b">dim</a> &gt;, <a class="el" href="classippl_1_1Quadrature.html#a64c0d6f641ac0f226a89697a312891a9">numElementNodes</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classippl_1_1Quadrature.html#a88303363e57088e2740d2f7e8c7db458">getIntegrationNodesForRefElement</a> () const</td></tr>
 <tr class="memdesc:a88303363e57088e2740d2f7e8c7db458"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the integration (quadrature) nodes for the reference element.  <a href="classippl_1_1Quadrature.html#a88303363e57088e2740d2f7e8c7db458">More...</a><br /></td></tr>
 <tr class="separator:a88303363e57088e2740d2f7e8c7db458"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a97a9c1a9f16267f5ccf27ab7af2b79f5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classippl_1_1Vector.html">Vector</a>&lt; <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a>, NumNodes1D &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classippl_1_1Quadrature.html#a97a9c1a9f16267f5ccf27ab7af2b79f5">getIntegrationNodes1D</a> (const <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a> &amp;a, const <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a> &amp;b) const</td></tr>
+<tr class="memitem:a97a9c1a9f16267f5ccf27ab7af2b79f5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classippl_1_1Vector.html">Vector</a>&lt; T, NumNodes1D &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classippl_1_1Quadrature.html#a97a9c1a9f16267f5ccf27ab7af2b79f5">getIntegrationNodes1D</a> (const T &amp;a, const T &amp;b) const</td></tr>
 <tr class="memdesc:a97a9c1a9f16267f5ccf27ab7af2b79f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the quadrature nodes for one dimension. (With respect to the given domain [a, b])  <a href="classippl_1_1Quadrature.html#a97a9c1a9f16267f5ccf27ab7af2b79f5">More...</a><br /></td></tr>
 <tr class="separator:a97a9c1a9f16267f5ccf27ab7af2b79f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7683e2eb4144fd676773f066edf45f61"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classippl_1_1Vector.html">Vector</a>&lt; <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a>, NumNodes1D &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classippl_1_1Quadrature.html#a7683e2eb4144fd676773f066edf45f61">getWeights1D</a> (const <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a> &amp;a, const <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a> &amp;b) const</td></tr>
+<tr class="memitem:a7683e2eb4144fd676773f066edf45f61"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classippl_1_1Vector.html">Vector</a>&lt; T, NumNodes1D &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classippl_1_1Quadrature.html#a7683e2eb4144fd676773f066edf45f61">getWeights1D</a> (const T &amp;a, const T &amp;b) const</td></tr>
 <tr class="memdesc:a7683e2eb4144fd676773f066edf45f61"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the quadrature weights for one dimension. (With respect to the given domain [a, b])  <a href="classippl_1_1Quadrature.html#a7683e2eb4144fd676773f066edf45f61">More...</a><br /></td></tr>
 <tr class="separator:a7683e2eb4144fd676773f066edf45f61"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a368cc46932453703af574c900a282d6b"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classippl_1_1Quadrature.html#a368cc46932453703af574c900a282d6b">computeNodesAndWeights</a> ()=0</td></tr>
@@ -161,17 +163,17 @@ Protected Attributes</h2></td></tr>
 <tr class="separator:aece90741df9344a8b3f0eb6d80b773d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0c3a23ba2e2ddce8dbe2c3b437619fe3"><td class="memItemLeft" align="right" valign="top">const ElementType &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classippl_1_1Quadrature.html#a0c3a23ba2e2ddce8dbe2c3b437619fe3">ref_element_m</a></td></tr>
 <tr class="separator:a0c3a23ba2e2ddce8dbe2c3b437619fe3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a13784a9379f001e78faf96abbb302e2a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classippl_1_1Vector.html">Vector</a>&lt; <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a>, NumNodes1D &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classippl_1_1Quadrature.html#a13784a9379f001e78faf96abbb302e2a">integration_nodes_m</a></td></tr>
+<tr class="memitem:a13784a9379f001e78faf96abbb302e2a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classippl_1_1Vector.html">Vector</a>&lt; T, NumNodes1D &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classippl_1_1Quadrature.html#a13784a9379f001e78faf96abbb302e2a">integration_nodes_m</a></td></tr>
 <tr class="separator:a13784a9379f001e78faf96abbb302e2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a59eacdd248549c11874725f7038886d6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classippl_1_1Vector.html">Vector</a>&lt; <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a>, NumNodes1D &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classippl_1_1Quadrature.html#a59eacdd248549c11874725f7038886d6">weights_m</a></td></tr>
+<tr class="memitem:a59eacdd248549c11874725f7038886d6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classippl_1_1Vector.html">Vector</a>&lt; T, NumNodes1D &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classippl_1_1Quadrature.html#a59eacdd248549c11874725f7038886d6">weights_m</a></td></tr>
 <tr class="separator:a59eacdd248549c11874725f7038886d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a626f14bd379845c277a8b3d7972a2b55"><td class="memItemLeft" align="right" valign="top"><a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classippl_1_1Quadrature.html#a626f14bd379845c277a8b3d7972a2b55">a_m</a></td></tr>
+<tr class="memitem:a626f14bd379845c277a8b3d7972a2b55"><td class="memItemLeft" align="right" valign="top">T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classippl_1_1Quadrature.html#a626f14bd379845c277a8b3d7972a2b55">a_m</a></td></tr>
 <tr class="separator:a626f14bd379845c277a8b3d7972a2b55"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8de0d1355149bc577e3c4bfb413737b5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classippl_1_1Quadrature.html#a8de0d1355149bc577e3c4bfb413737b5">b_m</a></td></tr>
+<tr class="memitem:a8de0d1355149bc577e3c4bfb413737b5"><td class="memItemLeft" align="right" valign="top">T&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classippl_1_1Quadrature.html#a8de0d1355149bc577e3c4bfb413737b5">b_m</a></td></tr>
 <tr class="separator:a8de0d1355149bc577e3c4bfb413737b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><div class="compoundTemplParams">template&lt;typename <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a>, unsigned NumNodes1D, typename ElementType&gt;<br />
+<div class="textblock"><div class="compoundTemplParams">template&lt;typename T, unsigned NumNodes1D, typename ElementType&gt;<br />
 class ippl::Quadrature&lt; T, NumNodes1D, ElementType &gt;</div><p >This is the base class for all quadrature rules. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
@@ -182,20 +184,42 @@ class ippl::Quadrature&lt; T, NumNodes1D, ElementType &gt;</div><p >This is the 
   </dd>
 </dl>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="ad0cdd78559face6a747400440d2c6fac" name="ad0cdd78559face6a747400440d2c6fac"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad0cdd78559face6a747400440d2c6fac">&#9670;&#160;</a></span>Quadrature()</h2>
+<a id="a1f0a2068183840bedd11e9ab626e4846" name="a1f0a2068183840bedd11e9ab626e4846"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1f0a2068183840bedd11e9ab626e4846">&#9670;&#160;</a></span>Quadrature()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a> , unsigned NumNodes1D, typename ElementType &gt; </div>
+template&lt;typename T , unsigned NumNodes1D, typename ElementType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classippl_1_1Quadrature.html">ippl::Quadrature</a>&lt; <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a>, NumNodes1D, ElementType &gt;::Quadrature </td>
+          <td class="memname"><a class="el" href="classippl_1_1Quadrature.html">ippl::Quadrature</a>&lt; T, NumNodes1D, ElementType &gt;::Quadrature </td>
           <td>(</td>
           <td class="paramtype">const ElementType &amp;&#160;</td>
-          <td class="paramname"><em>ref_element</em></td><td>)</td>
+          <td class="paramname"><em>ref_element</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">unsigned&#160;</td>
+          <td class="paramname"><em>degree</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">T&#160;</td>
+          <td class="paramname"><em>a</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">T&#160;</td>
+          <td class="paramname"><em>b</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -204,9 +228,41 @@ template&lt;typename <a class="el" href="BumponTailInstability_8cpp.html#a6b2d03
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">ref_element</td><td>reference element to compute the quadrature nodes on </td></tr>
+    <tr><td class="paramname">degree</td><td>degree of exactness of the quadrature rule </td></tr>
+    <tr><td class="paramname">a</td><td>source interval start the nodes/weights are computed on </td></tr>
+    <tr><td class="paramname">b</td><td>source interval end the nodes/weights are computed on </td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a147b453dcc7f5a829370b681d641add6" name="a147b453dcc7f5a829370b681d641add6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a147b453dcc7f5a829370b681d641add6">&#9670;&#160;</a></span>~Quadrature()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , unsigned NumNodes1D, typename ElementType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="classippl_1_1Quadrature.html">ippl::Quadrature</a>&lt; T, NumNodes1D, ElementType &gt;::~<a class="el" href="classippl_1_1Quadrature.html">Quadrature</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span><span class="mlabel">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Virtual destructor so derived rules can be destroyed through a Quadrature*. </p>
 
 </div>
 </div>
@@ -217,13 +273,13 @@ template&lt;typename <a class="el" href="BumponTailInstability_8cpp.html#a6b2d03
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a> , unsigned NumNodes1D, typename ElementType &gt; </div>
+template&lt;typename T , unsigned NumNodes1D, typename ElementType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void <a class="el" href="classippl_1_1Quadrature.html">ippl::Quadrature</a>&lt; <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a>, NumNodes1D, ElementType &gt;::computeNodesAndWeights </td>
+          <td class="memname">virtual void <a class="el" href="classippl_1_1Quadrature.html">ippl::Quadrature</a>&lt; T, NumNodes1D, ElementType &gt;::computeNodesAndWeights </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -238,7 +294,7 @@ template&lt;typename <a class="el" href="BumponTailInstability_8cpp.html#a6b2d03
 
 <p>Pure virtual function that computes the local quadrature nodes and weights. (Needs to be implemented in derived classes) </p>
 
-<p>Implemented in <a class="el" href="classippl_1_1GaussJacobiQuadrature.html#afe827561c6d1b3146ae178c725a87162">ippl::GaussJacobiQuadrature&lt; T, NumNodes1D, ElementType &gt;</a>, <a class="el" href="classippl_1_1GaussJacobiQuadrature.html#afe827561c6d1b3146ae178c725a87162">ippl::GaussJacobiQuadrature&lt; T, 5, ElementType &gt;</a>, <a class="el" href="classippl_1_1GaussJacobiQuadrature.html#afe827561c6d1b3146ae178c725a87162">ippl::GaussJacobiQuadrature&lt; Tlhs, 5, ElementType &gt;</a>, and <a class="el" href="classippl_1_1MidpointQuadrature.html#a6960c427506f864e22eec674bbc8e40a">ippl::MidpointQuadrature&lt; T, NumNodes1D, ElementType &gt;</a>.</p>
+<p>Implemented in <a class="el" href="classippl_1_1GaussLegendreQuadrature.html#a18c87c7a53ba5849a23b21db5d75de29">ippl::GaussLegendreQuadrature&lt; T, NumNodes1D, ElementType &gt;</a>, <a class="el" href="classippl_1_1GaussLegendreQuadrature.html#a18c87c7a53ba5849a23b21db5d75de29">ippl::GaussLegendreQuadrature&lt; T, 5, ElementType &gt;</a>, <a class="el" href="classippl_1_1GaussLegendreQuadrature.html#a18c87c7a53ba5849a23b21db5d75de29">ippl::GaussLegendreQuadrature&lt; Tlhs, 5, ElementType &gt;</a>, <a class="el" href="classippl_1_1GaussLobattoQuadrature.html#aa77dd8b65173f4a8601736a33022f47a">ippl::GaussLobattoQuadrature&lt; T, NumNodes1D, ElementType &gt;</a>, and <a class="el" href="classippl_1_1MidpointQuadrature.html#a6960c427506f864e22eec674bbc8e40a">ippl::MidpointQuadrature&lt; T, NumNodes1D, ElementType &gt;</a>.</p>
 
 </div>
 </div>
@@ -248,10 +304,10 @@ template&lt;typename <a class="el" href="BumponTailInstability_8cpp.html#a6b2d03
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a> , unsigned NumNodes1D, typename ElementType &gt; </div>
+template&lt;typename T , unsigned NumNodes1D, typename ElementType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">size_t <a class="el" href="classippl_1_1Quadrature.html">ippl::Quadrature</a>&lt; <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a>, NumNodes1D, ElementType &gt;::getDegree</td>
+          <td class="memname">size_t <a class="el" href="classippl_1_1Quadrature.html">ippl::Quadrature</a>&lt; T, NumNodes1D, ElementType &gt;::getDegree</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -267,18 +323,18 @@ template&lt;typename <a class="el" href="BumponTailInstability_8cpp.html#a6b2d03
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a> , unsigned NumNodes1D, typename ElementType &gt; </div>
+template&lt;typename T , unsigned NumNodes1D, typename ElementType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classippl_1_1Vector.html">Vector</a>&lt; <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a>, NumNodes1D &gt; <a class="el" href="classippl_1_1Quadrature.html">ippl::Quadrature</a>&lt; <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a>, NumNodes1D, ElementType &gt;::getIntegrationNodes1D </td>
+          <td class="memname"><a class="el" href="classippl_1_1Vector.html">Vector</a>&lt; T, NumNodes1D &gt; <a class="el" href="classippl_1_1Quadrature.html">ippl::Quadrature</a>&lt; T, NumNodes1D, ElementType &gt;::getIntegrationNodes1D </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a> &amp;&#160;</td>
+          <td class="paramtype">const T &amp;&#160;</td>
           <td class="paramname"><em>a</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a> &amp;&#160;</td>
+          <td class="paramtype">const T &amp;&#160;</td>
           <td class="paramname"><em>b</em>&#160;</td>
         </tr>
         <tr>
@@ -307,10 +363,10 @@ template&lt;typename <a class="el" href="BumponTailInstability_8cpp.html#a6b2d03
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a> , unsigned NumNodes1D, typename ElementType &gt; </div>
+template&lt;typename T , unsigned NumNodes1D, typename ElementType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classippl_1_1Vector.html">Vector</a>&lt; <a class="el" href="classippl_1_1Vector.html">Vector</a>&lt; <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a>, <a class="el" href="classippl_1_1Quadrature.html">Quadrature</a>&lt; <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a>, NumNodes1D, ElementType &gt;<a class="el" href="classippl_1_1Quadrature.html#a1ffa01d8236b7122a12821937c28f02b">::dim</a> &gt;, <a class="el" href="classippl_1_1Quadrature.html">Quadrature</a>&lt; <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a>, NumNodes1D, ElementType &gt;<a class="el" href="classippl_1_1Quadrature.html#a64c0d6f641ac0f226a89697a312891a9">::numElementNodes</a> &gt; <a class="el" href="classippl_1_1Quadrature.html">ippl::Quadrature</a>&lt; <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a>, NumNodes1D, ElementType &gt;::getIntegrationNodesForRefElement</td>
+          <td class="memname"><a class="el" href="classippl_1_1Vector.html">Vector</a>&lt; <a class="el" href="classippl_1_1Vector.html">Vector</a>&lt; T, <a class="el" href="classippl_1_1Quadrature.html">Quadrature</a>&lt; T, NumNodes1D, ElementType &gt;<a class="el" href="classippl_1_1Quadrature.html#a1ffa01d8236b7122a12821937c28f02b">::dim</a> &gt;, <a class="el" href="classippl_1_1Quadrature.html">Quadrature</a>&lt; T, NumNodes1D, ElementType &gt;<a class="el" href="classippl_1_1Quadrature.html#a64c0d6f641ac0f226a89697a312891a9">::numElementNodes</a> &gt; <a class="el" href="classippl_1_1Quadrature.html">ippl::Quadrature</a>&lt; T, NumNodes1D, ElementType &gt;::getIntegrationNodesForRefElement</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -326,10 +382,10 @@ template&lt;typename <a class="el" href="BumponTailInstability_8cpp.html#a6b2d03
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a> , unsigned NumNodes1D, typename ElementType &gt; </div>
+template&lt;typename T , unsigned NumNodes1D, typename ElementType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">size_t <a class="el" href="classippl_1_1Quadrature.html">ippl::Quadrature</a>&lt; <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a>, NumNodes1D, ElementType &gt;::getOrder</td>
+          <td class="memname">size_t <a class="el" href="classippl_1_1Quadrature.html">ippl::Quadrature</a>&lt; T, NumNodes1D, ElementType &gt;::getOrder</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -345,18 +401,18 @@ template&lt;typename <a class="el" href="BumponTailInstability_8cpp.html#a6b2d03
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a> , unsigned NumNodes1D, typename ElementType &gt; </div>
+template&lt;typename T , unsigned NumNodes1D, typename ElementType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classippl_1_1Vector.html">Vector</a>&lt; <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a>, NumNodes1D &gt; <a class="el" href="classippl_1_1Quadrature.html">ippl::Quadrature</a>&lt; <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a>, NumNodes1D, ElementType &gt;::getWeights1D </td>
+          <td class="memname"><a class="el" href="classippl_1_1Vector.html">Vector</a>&lt; T, NumNodes1D &gt; <a class="el" href="classippl_1_1Quadrature.html">ippl::Quadrature</a>&lt; T, NumNodes1D, ElementType &gt;::getWeights1D </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a> &amp;&#160;</td>
+          <td class="paramtype">const T &amp;&#160;</td>
           <td class="paramname"><em>a</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a> &amp;&#160;</td>
+          <td class="paramtype">const T &amp;&#160;</td>
           <td class="paramname"><em>b</em>&#160;</td>
         </tr>
         <tr>
@@ -385,10 +441,10 @@ template&lt;typename <a class="el" href="BumponTailInstability_8cpp.html#a6b2d03
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a> , unsigned NumNodes1D, typename ElementType &gt; </div>
+template&lt;typename T , unsigned NumNodes1D, typename ElementType &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classippl_1_1Vector.html">Vector</a>&lt; <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a>, <a class="el" href="classippl_1_1Quadrature.html">Quadrature</a>&lt; <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a>, NumNodes1D, ElementType &gt;<a class="el" href="classippl_1_1Quadrature.html#a64c0d6f641ac0f226a89697a312891a9">::numElementNodes</a> &gt; <a class="el" href="classippl_1_1Quadrature.html">ippl::Quadrature</a>&lt; <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a>, NumNodes1D, ElementType &gt;::getWeightsForRefElement</td>
+          <td class="memname"><a class="el" href="classippl_1_1Vector.html">Vector</a>&lt; T, <a class="el" href="classippl_1_1Quadrature.html">Quadrature</a>&lt; T, NumNodes1D, ElementType &gt;<a class="el" href="classippl_1_1Quadrature.html#a64c0d6f641ac0f226a89697a312891a9">::numElementNodes</a> &gt; <a class="el" href="classippl_1_1Quadrature.html">ippl::Quadrature</a>&lt; T, NumNodes1D, ElementType &gt;::getWeightsForRefElement</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -405,13 +461,13 @@ template&lt;typename <a class="el" href="BumponTailInstability_8cpp.html#a6b2d03
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a> , unsigned NumNodes1D, typename ElementType &gt; </div>
+template&lt;typename T , unsigned NumNodes1D, typename ElementType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a> <a class="el" href="classippl_1_1Quadrature.html">ippl::Quadrature</a>&lt; <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a>, NumNodes1D, ElementType &gt;::a_m</td>
+          <td class="memname">T <a class="el" href="classippl_1_1Quadrature.html">ippl::Quadrature</a>&lt; T, NumNodes1D, ElementType &gt;::a_m</td>
         </tr>
       </table>
   </td>
@@ -429,13 +485,13 @@ template&lt;typename <a class="el" href="BumponTailInstability_8cpp.html#a6b2d03
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a> , unsigned NumNodes1D, typename ElementType &gt; </div>
+template&lt;typename T , unsigned NumNodes1D, typename ElementType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a> <a class="el" href="classippl_1_1Quadrature.html">ippl::Quadrature</a>&lt; <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a>, NumNodes1D, ElementType &gt;::b_m</td>
+          <td class="memname">T <a class="el" href="classippl_1_1Quadrature.html">ippl::Quadrature</a>&lt; T, NumNodes1D, ElementType &gt;::b_m</td>
         </tr>
       </table>
   </td>
@@ -453,13 +509,13 @@ template&lt;typename <a class="el" href="BumponTailInstability_8cpp.html#a6b2d03
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a> , unsigned NumNodes1D, typename ElementType &gt; </div>
+template&lt;typename T , unsigned NumNodes1D, typename ElementType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">unsigned <a class="el" href="classippl_1_1Quadrature.html">ippl::Quadrature</a>&lt; <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a>, NumNodes1D, ElementType &gt;::degree_m</td>
+          <td class="memname">unsigned <a class="el" href="classippl_1_1Quadrature.html">ippl::Quadrature</a>&lt; T, NumNodes1D, ElementType &gt;::degree_m</td>
         </tr>
       </table>
   </td>
@@ -477,13 +533,13 @@ template&lt;typename <a class="el" href="BumponTailInstability_8cpp.html#a6b2d03
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a> , unsigned NumNodes1D, typename ElementType &gt; </div>
+template&lt;typename T , unsigned NumNodes1D, typename ElementType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr unsigned <a class="el" href="classippl_1_1Quadrature.html">ippl::Quadrature</a>&lt; <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a>, NumNodes1D, ElementType &gt;::dim = ElementType::dim</td>
+          <td class="memname">constexpr unsigned <a class="el" href="classippl_1_1Quadrature.html">ippl::Quadrature</a>&lt; T, NumNodes1D, ElementType &gt;::dim = ElementType::dim</td>
         </tr>
       </table>
   </td>
@@ -501,13 +557,13 @@ template&lt;typename <a class="el" href="BumponTailInstability_8cpp.html#a6b2d03
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a> , unsigned NumNodes1D, typename ElementType &gt; </div>
+template&lt;typename T , unsigned NumNodes1D, typename ElementType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classippl_1_1Vector.html">Vector</a>&lt;<a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a>, NumNodes1D&gt; <a class="el" href="classippl_1_1Quadrature.html">ippl::Quadrature</a>&lt; <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a>, NumNodes1D, ElementType &gt;::integration_nodes_m</td>
+          <td class="memname"><a class="el" href="classippl_1_1Vector.html">Vector</a>&lt;T, NumNodes1D&gt; <a class="el" href="classippl_1_1Quadrature.html">ippl::Quadrature</a>&lt; T, NumNodes1D, ElementType &gt;::integration_nodes_m</td>
         </tr>
       </table>
   </td>
@@ -525,13 +581,13 @@ template&lt;typename <a class="el" href="BumponTailInstability_8cpp.html#a6b2d03
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a> , unsigned NumNodes1D, typename ElementType &gt; </div>
+template&lt;typename T , unsigned NumNodes1D, typename ElementType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr unsigned <a class="el" href="classippl_1_1Quadrature.html">ippl::Quadrature</a>&lt; <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a>, NumNodes1D, ElementType &gt;::numElementNodes</td>
+          <td class="memname">constexpr unsigned <a class="el" href="classippl_1_1Quadrature.html">ippl::Quadrature</a>&lt; T, NumNodes1D, ElementType &gt;::numElementNodes</td>
         </tr>
       </table>
   </td>
@@ -542,7 +598,7 @@ template&lt;typename <a class="el" href="BumponTailInstability_8cpp.html#a6b2d03
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">=</div>
 <div class="line">            <a class="code hl_function" href="Quadrature_8h.html#ad1209d92692cdd4d6f52a41964b0c36d">getNumElementNodes</a>(NumNodes1D, ElementType::dim)</div>
-<div class="ttc" id="aQuadrature_8h_html_ad1209d92692cdd4d6f52a41964b0c36d"><div class="ttname"><a href="Quadrature_8h.html#ad1209d92692cdd4d6f52a41964b0c36d">getNumElementNodes</a></div><div class="ttdeci">constexpr unsigned getNumElementNodes(unsigned NumNodes1D, unsigned Dim)</div><div class="ttdef"><b>Definition:</b> Quadrature.h:21</div></div>
+<div class="ttc" id="aQuadrature_8h_html_ad1209d92692cdd4d6f52a41964b0c36d"><div class="ttname"><a href="Quadrature_8h.html#ad1209d92692cdd4d6f52a41964b0c36d">getNumElementNodes</a></div><div class="ttdeci">constexpr unsigned getNumElementNodes(unsigned NumNodes1D, unsigned Dim)</div><div class="ttdef"><b>Definition:</b> Quadrature.h:23</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -552,13 +608,13 @@ template&lt;typename <a class="el" href="BumponTailInstability_8cpp.html#a6b2d03
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a> , unsigned NumNodes1D, typename ElementType &gt; </div>
+template&lt;typename T , unsigned NumNodes1D, typename ElementType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr unsigned <a class="el" href="classippl_1_1Quadrature.html">ippl::Quadrature</a>&lt; <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a>, NumNodes1D, ElementType &gt;::numNodes1D = NumNodes1D</td>
+          <td class="memname">constexpr unsigned <a class="el" href="classippl_1_1Quadrature.html">ippl::Quadrature</a>&lt; T, NumNodes1D, ElementType &gt;::numNodes1D = NumNodes1D</td>
         </tr>
       </table>
   </td>
@@ -576,13 +632,13 @@ template&lt;typename <a class="el" href="BumponTailInstability_8cpp.html#a6b2d03
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a> , unsigned NumNodes1D, typename ElementType &gt; </div>
+template&lt;typename T , unsigned NumNodes1D, typename ElementType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const ElementType&amp; <a class="el" href="classippl_1_1Quadrature.html">ippl::Quadrature</a>&lt; <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a>, NumNodes1D, ElementType &gt;::ref_element_m</td>
+          <td class="memname">const ElementType&amp; <a class="el" href="classippl_1_1Quadrature.html">ippl::Quadrature</a>&lt; T, NumNodes1D, ElementType &gt;::ref_element_m</td>
         </tr>
       </table>
   </td>
@@ -600,13 +656,13 @@ template&lt;typename <a class="el" href="BumponTailInstability_8cpp.html#a6b2d03
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a> , unsigned NumNodes1D, typename ElementType &gt; </div>
+template&lt;typename T , unsigned NumNodes1D, typename ElementType &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classippl_1_1Vector.html">Vector</a>&lt;<a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a>, NumNodes1D&gt; <a class="el" href="classippl_1_1Quadrature.html">ippl::Quadrature</a>&lt; <a class="el" href="BumponTailInstability_8cpp.html#a6b2d038ea9c8d2651eecffe0e28b7ebb">T</a>, NumNodes1D, ElementType &gt;::weights_m</td>
+          <td class="memname"><a class="el" href="classippl_1_1Vector.html">Vector</a>&lt;T, NumNodes1D&gt; <a class="el" href="classippl_1_1Quadrature.html">ippl::Quadrature</a>&lt; T, NumNodes1D, ElementType &gt;::weights_m</td>
         </tr>
       </table>
   </td>

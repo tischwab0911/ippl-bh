@@ -1,0 +1,12 @@
+<map id="ParticleAttribBase.hpp" name="ParticleAttribBase.hpp">
+<area shape="rect" id="node1" title="Kokkos&#45;free particle attribute base class for NBody." alt="" coords="429,5,580,31"/>
+<area shape="rect" id="node2" href="$NBodyParticleContainer_8hpp.html" title="Particle container for NBody simulations." alt="" coords="325,79,509,104"/>
+<area shape="rect" id="node10" href="$NBody_2core_2ParticleAttrib_8hpp.html" title="minimal particle attribute class to mirror class hierarchy" alt="" coords="533,79,655,104"/>
+<area shape="rect" id="node3" href="$BeamDiagnostics_8hpp.html" title="Compute mean velocity and temperatures of particles in a beam." alt="" coords="5,152,153,177"/>
+<area shape="rect" id="node4" href="$LeapfrogStepper_8hpp.html" title="Leapfrog KDK integrator (kick / drift+wrap) for time integration." alt="" coords="177,152,320,177"/>
+<area shape="rect" id="node5" href="$NBodyManager_8hpp.html" title="A base class to derive simulation managers for NBody simulations." alt="" coords="291,225,425,251"/>
+<area shape="rect" id="node6" href="$NBodyKokkosView_8hpp.html" title="Wrapper for Kokkos around raw pointers exposed by the particle container." alt="" coords="396,152,555,177"/>
+<area shape="rect" id="node7" href="$NBodySolver_8hpp.html" title="BH solver for coulomb interactions in NBody simulations." alt="" coords="579,152,702,177"/>
+<area shape="rect" id="node9" href="$NBodySync_8cpp.html" title=" " alt="" coords="726,152,841,177"/>
+<area shape="rect" id="node8" href="$NBodySolver_8cpp.html" title="BH solver for coulomb interactions in NBody simulations." alt="" coords="579,225,702,251"/>
+</map>

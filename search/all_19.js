@@ -1,7 +1,9 @@
 var searchData=
 [
-  ['zero_5fface_0',['ZERO_FACE',['../namespaceippl.html#abb55e9cae54ba42c7332594098b30e42a38bc1bad970fb948ef4f68713e837545',1,'ippl']]],
-  ['zeroface_1',['ZeroFace',['../classippl_1_1ZeroFace.html',1,'ippl::ZeroFace&lt; Field &gt;'],['../classippl_1_1ZeroFace.html#a662c13f40666e9bec7d2d7be44bd353d',1,'ippl::ZeroFace::ZeroFace()']]],
-  ['zeta_5fm_2',['zeta_m',['../structippl_1_1polynomial__newton__preconditioner.html#aaf265c6fa9652f11706c68f20bf364bd',1,'ippl::polynomial_newton_preconditioner::zeta_m()'],['../structippl_1_1polynomial__chebyshev__preconditioner.html#aad16ea227a3fcf95b22430922525acb7',1,'ippl::polynomial_chebyshev_preconditioner::zeta_m()']]],
-  ['zvector_5fm_3',['zvector_m',['../structippl_1_1detail_1_1meta__curl.html#a2ef24c16a78c5887647b34b36ba74e15',1,'ippl::detail::meta_curl']]]
+  ['x_0',['x',['../structippl_1_1Interpolation_1_1detail_1_1GatherArgumentsBase.html#adcb15f333d3b2ad30860d864471a8cd6',1,'ippl::Interpolation::detail::GatherArgumentsBase::x()'],['../structippl_1_1Interpolation_1_1detail_1_1ScatterArgumentsBase.html#ab853505a3225a40f20559add82046109',1,'ippl::Interpolation::detail::ScatterArgumentsBase::x()'],['../structippl_1_1nbody_1_1Triple.html#a41d4c30ab22eedb2be63e3cca9752db2',1,'ippl::nbody::Triple::x()'],['../classippl_1_1nbody_1_1NBodyParticleContainer.html#a31a5381b196b8ede1cb008358d69640f',1,'ippl::nbody::NBodyParticleContainer::x()']]],
+  ['x_5f_1',['X_',['../classippl_1_1detail_1_1GPModel.html#a2f313dcecc7342d7243f9f002258ab0c',1,'ippl::detail::GPModel']]],
+  ['x_5fm_2',['x_m',['../structippl_1_1polynomial__chebyshev__preconditioner.html#ae13373f9b8aa3a7210c88a65bc042434',1,'ippl::polynomial_chebyshev_preconditioner']]],
+  ['x_5fold_5fm_3',['x_old_m',['../structippl_1_1polynomial__chebyshev__preconditioner.html#a2f1f56bc188dea3d41ef52058d74f471',1,'ippl::polynomial_chebyshev_preconditioner']]],
+  ['xn_5f_4',['Xn_',['../classippl_1_1detail_1_1GPModel.html#a7beb8126d3c6931634d9f4f127367b71',1,'ippl::detail::GPModel']]],
+  ['xvector_5fm_5',['xvector_m',['../structippl_1_1detail_1_1meta__curl.html#a33b53691996b8705aff0b2524b54a9d5',1,'ippl::detail::meta_curl']]]
 ];

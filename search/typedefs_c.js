@@ -1,7 +1,11 @@
 var searchData=
 [
-  ['opensolver_5ft_0',['OpenSolver_t',['../datatypes_8h.html#af4af1d89bd336953ff4dbaf5c5ca9c8b',1,'OpenSolver_t():&#160;datatypes.h'],['../ChargedParticles_8hpp.html#af4af1d89bd336953ff4dbaf5c5ca9c8b',1,'OpenSolver_t():&#160;ChargedParticles.hpp']]],
-  ['operatorf_1',['OperatorF',['../classippl_1_1CG.html#a579f51454acb569d7abc2a3e746d8fee',1,'ippl::CG::OperatorF()'],['../classippl_1_1CG_3_01OperatorRet_00_01LowerRet_00_01UpperRet_00_01UpperLowerRet_00_01InverseDiagR1aeb04630d191cc1c271d88db5e47b23.html#ae2ba72c25d8c03cf94aa0de681fea7cb',1,'ippl::CG&lt; OperatorRet, LowerRet, UpperRet, UpperLowerRet, InverseDiagRet, FEMVector&lt; T &gt;, FEMVector&lt; T &gt; &gt;::OperatorF()'],['../classippl_1_1PCG.html#ae73135e0e14775f0b9e6a491cbf88801',1,'ippl::PCG::OperatorF()']]],
-  ['operatorret_2',['OperatorRet',['../classippl_1_1PoissonCG.html#aa2dd19d040a5fbbd2614be3e6a1bd4c5',1,'ippl::PoissonCG']]],
-  ['orb_3',['ORB',['../datatypes_8h.html#a9675e144be6d4d20c5b740fd8b7d0c83',1,'ORB():&#160;datatypes.h'],['../ChargedParticles_8hpp.html#a9675e144be6d4d20c5b740fd8b7d0c83',1,'ORB():&#160;ChargedParticles.hpp']]]
+  ['nativenufft_5ft_0',['NativeNUFFT_t',['../classippl_1_1FFT_3_01NUFFTransform_00_01RealField_01_4.html#ac46771119dc12197d93f32c53a46b01e',1,'ippl::FFT&lt; NUFFTransform, RealField &gt;']]],
+  ['nbodyacc_1',['NBodyAcc',['../namespaceippl_1_1nbody.html#ac241fd1bc258bc8d03c403b34181941b',1,'ippl::nbody']]],
+  ['ndindex_5ft_2',['NDIndex_t',['../classippl_1_1FieldLayout.html#ac0e42dbf29d3b220b0652cb8559f7a4d',1,'ippl::FieldLayout::NDIndex_t()'],['../classippl_1_1SubFieldLayout.html#a1436a29a694f2173949cda42101293dc',1,'ippl::SubFieldLayout::NDIndex_t()']]],
+  ['ndregion_5ft_3',['NDRegion_t',['../classippl_1_1detail_1_1RegionLayout.html#adfe1c0b9e8d63213cd9667e282621e85',1,'ippl::detail::RegionLayout']]],
+  ['nedelectype_4',['NedelecType',['../classippl_1_1FEMMaxwellDiffusionSolver.html#a0d43fe9b1c50d732348eb104b8258646',1,'ippl::FEMMaxwellDiffusionSolver']]],
+  ['neighbor_5flist_5',['neighbor_list',['../classippl_1_1FieldLayout.html#a489d6f8b884f8193807d7704d5e106a6',1,'ippl::FieldLayout::neighbor_list()'],['../classippl_1_1ParticleSpatialLayout.html#aec1de04a618491ccc01f506351891ae1',1,'ippl::ParticleSpatialLayout::neighbor_list()'],['../classippl_1_1ParticleSpatialOverlapLayout.html#a8fe2bdb13638b1b9c9dccdaf6f613161',1,'ippl::ParticleSpatialOverlapLayout::neighbor_list()']]],
+  ['neighbor_5frange_5flist_6',['neighbor_range_list',['../classippl_1_1FieldLayout.html#ab4004e828ab9973447bdc381afa90d69',1,'ippl::FieldLayout']]],
+  ['nullsolver_5ft_7',['NullSolver_t',['../datatypes_8h.html#ace8fabc88f00df2e15d636f24772fcef',1,'datatypes.h']]]
 ];

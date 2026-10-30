@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['code_20formatting_20setup_20guide_0',['Code Formatting Setup Guide',['../md_extras_CodeFormattingSetup.html',1,'']]],
-  ['creating_20custom_20solver_1',['Creating Custom Solver',['../custom_solver.html',1,'']]]
+  ['ippl_20_28independent_20parallel_20particle_20layer_29_0',['IPPL (Independent Parallel Particle Layer)',['../index.html',1,'']]]
 ];

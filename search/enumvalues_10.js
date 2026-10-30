@@ -1,4 +1,12 @@
 var searchData=
 [
-  ['upper_0',['UPPER',['../namespaceippl.html#a5bcdc8e22bc5599d8ae4fcfdbff9d629a526c04e2b5e0c3e55b80ac3827203a4c',1,'ippl']]]
+  ['shared_0',['Shared',['../classippl_1_1mpi_1_1rma_1_1Window.html#ad51963c9de49f39912dd08d5368d60baa35088fb88983f93b55d95d8602c30022',1,'ippl::mpi::rma::Window']]],
+  ['sink_1',['SINK',['../namespaceippl.html#a5a55502ef522088786000165502b35f5ad6f9056029742f2f718ef09b7812b972',1,'ippl']]],
+  ['sol_2',['SOL',['../classippl_1_1Poisson.html#a46f42979d7cf8518784fd655229ef1eeae7be6a5d79c2a98e2edfccc0c9a2cf49',1,'ippl::Poisson']]],
+  ['sol_5fand_5fgrad_3',['SOL_AND_GRAD',['../classippl_1_1Poisson.html#a46f42979d7cf8518784fd655229ef1eea8da31213d220ba43f137493e06dc5fb6',1,'ippl::Poisson']]],
+  ['solver_5frecv_4',['SOLVER_RECV',['../namespaceippl_1_1mpi_1_1tag.html#a15d567b75f6be9891166d172c200185aa6eb67bf33352d33d9b8d199a15ce4b47',1,'ippl::mpi::tag']]],
+  ['solver_5fsend_5',['SOLVER_SEND',['../namespaceippl_1_1mpi_1_1tag.html#a15d567b75f6be9891166d172c200185aa2f2886600ba0b8f30cd54638b1e73540',1,'ippl::mpi::tag']]],
+  ['standard_6',['STANDARD',['../classippl_1_1FFTOpenPoissonSolver.html#aef4d0197af3ef8a26c8a2c2a5ee769fbad60ea505c04fcdf124a6c9c9b00ddf42',1,'ippl::FFTOpenPoissonSolver']]],
+  ['stroudsecrest_7',['StroudSecrest',['../namespaceippl_1_1nodes1d.html#a1e96861fc28b05d5cdd9a68fe279f6a1aa4210c07dad6560d3baef2c37598745e',1,'ippl::nodes1d']]],
+  ['sum_8',['SUM',['../namespaceippl_1_1mpi.html#af4f4f1044f97b9c23c582bf914d74a0fa6970bdc2201030b9c03fbdcf3973858a',1,'ippl::mpi']]]
 ];

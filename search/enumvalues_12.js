@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['zero_5fface_0',['ZERO_FACE',['../namespaceippl.html#abb55e9cae54ba42c7332594098b30e42a38bc1bad970fb948ef4f68713e837545',1,'ippl']]]
+  ['upper_0',['UPPER',['../namespaceippl.html#a5bcdc8e22bc5599d8ae4fcfdbff9d629a526c04e2b5e0c3e55b80ac3827203a4c',1,'ippl']]]
 ];

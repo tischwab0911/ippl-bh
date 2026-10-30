@@ -1,0 +1,4 @@
+<map id="LeapfrogStepper.hpp" name="LeapfrogStepper.hpp">
+<area shape="rect" id="node1" title="Leapfrog KDK integrator (kick / drift+wrap) for time integration." alt="" coords="5,5,148,31"/>
+<area shape="rect" id="node2" href="$NBodyManager_8hpp.html" title="A base class to derive simulation managers for NBody simulations." alt="" coords="9,79,144,104"/>
+</map>

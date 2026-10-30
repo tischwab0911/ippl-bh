@@ -1,0 +1,15 @@
+<map id="primitives_gpu.h" name="primitives_gpu.h">
+<area shape="rect" id="node1" title="Per&#45;axis triple type, cstone&#45;style GPU reduction and element&#45;wise primitives." alt="" coords="225,5,341,31"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,86,80,111"/>
+<area shape="rect" id="node3" title=" " alt="" coords="105,86,170,111"/>
+<area shape="rect" id="node4" title=" " alt="" coords="195,86,248,111"/>
+<area shape="rect" id="node5" title=" " alt="" coords="272,79,419,119"/>
+<area shape="rect" id="node6" title=" " alt="" coords="443,86,573,111"/>
+<area shape="rect" id="node7" href="$Accelerator_8hpp.html" title="Realize the configure&#45;time GPU/CPU choice." alt="" coords="597,86,781,111"/>
+<area shape="rect" id="node8" title=" " alt="" coords="319,174,401,199"/>
+<area shape="rect" id="node9" title=" " alt="" coords="425,174,484,199"/>
+<area shape="rect" id="node10" title=" " alt="" coords="509,174,689,199"/>
+<area shape="rect" id="node11" title=" " alt="" coords="713,167,847,207"/>
+<area shape="rect" id="node12" title=" " alt="" coords="872,174,1016,199"/>
+<area shape="rect" id="node13" title=" " alt="" coords="1040,167,1221,207"/>
+</map>

@@ -1,0 +1,14 @@
+<map id="Accelerator.hpp" name="Accelerator.hpp">
+<area shape="rect" id="node1" title="Realize the configure&#45;time GPU/CPU choice." alt="" coords="417,5,529,31"/>
+<area shape="rect" id="node2" href="$BeamDiagnostics_8hpp.html" title="Compute mean velocity and temperatures of particles in a beam." alt="" coords="23,225,171,251"/>
+<area shape="rect" id="node3" href="$GpuTimer_8hpp.html" title="Small wrapper for IPPL&#45;Style scoped timer for NBody simulations." alt="" coords="882,225,984,251"/>
+<area shape="rect" id="node4" href="$NBodyManager_8hpp.html" title="A base class to derive simulation managers for NBody simulations." alt="" coords="308,299,443,324"/>
+<area shape="rect" id="node5" href="$NBodySolver_8cpp.html" title="BH solver for coulomb interactions in NBody simulations." alt="" coords="916,299,1038,324"/>
+<area shape="rect" id="node6" href="$LeapfrogStepper_8hpp.html" title="Leapfrog KDK integrator (kick / drift+wrap) for time integration." alt="" coords="195,225,338,251"/>
+<area shape="rect" id="node7" href="$NBodyKokkosView_8hpp.html" title="Wrapper for Kokkos around raw pointers exposed by the particle container." alt="" coords="699,225,858,251"/>
+<area shape="rect" id="node8" href="$NBodyParticleContainer_8hpp.html" title="Particle container for NBody simulations." alt="" coords="376,152,560,177"/>
+<area shape="rect" id="node11" href="$NBody_2core_2ParticleAttrib_8hpp.html" title="minimal particle attribute class to mirror class hierarchy" alt="" coords="1111,79,1232,104"/>
+<area shape="rect" id="node12" href="$primitives__gpu_8h.html" title="Per&#45;axis triple type, cstone&#45;style GPU reduction and element&#45;wise primitives." alt="" coords="319,79,435,104"/>
+<area shape="rect" id="node9" href="$NBodySolver_8hpp.html" title="BH solver for coulomb interactions in NBody simulations." alt="" coords="413,225,536,251"/>
+<area shape="rect" id="node10" href="$NBodySync_8cpp.html" title=" " alt="" coords="560,225,674,251"/>
+</map>

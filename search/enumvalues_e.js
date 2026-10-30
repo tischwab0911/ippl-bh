@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['reduce_0',['REDUCE',['../namespaceippl_1_1detail.html#a0be274c2d351e95c9f462b417f5166dba0cc2f6aef460579d789862c31085e9e3',1,'ippl::detail']]],
-  ['reflective_1',['REFLECTIVE',['../namespaceippl.html#a5a55502ef522088786000165502b35f5a36033a08f904a9954b202e471a74f695',1,'ippl']]]
+  ['quadrupole_0',['Quadrupole',['../namespaceippl_1_1nbody.html#ad114663fc2726ac4ab4b1b0df4e8043da6e83253687eb7c43bebfd34e61a99300',1,'ippl::nbody']]]
 ];
