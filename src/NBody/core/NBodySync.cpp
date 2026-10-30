@@ -1,6 +1,7 @@
 #include "NBody/NBodyParticleContainer.hpp"
 
 #include <tuple>
+#include <type_traits>
 
 #include "cstone/fields/field_get.hpp"
 #include "cstone/util/tuple_util.hpp"
@@ -17,9 +18,18 @@ void syncGravBH(NBodyParticleContainer<P, 3>& pc) {
     constexpr std::size_t mSlot = C::template idxOf<"charge">;
 
     auto t = pc.dataTuple();
-    pc.domain_.syncGrav(pc.keys, pc.x, pc.y, pc.z, pc.hZero, std::get<mSlot>(t),
-                        cstone::get<ConservedFields>(pc),
-                        std::tie(pc.scratch0, pc.scratch1, pc.scratchTh, pc.scratchSfc));
+    if constexpr (std::is_same_v<DependentFields, fields::RelDependent>) {
+        // Per-particle velocities: cstone scales the MAC radii of the locally essential tree and
+        // of the halos with the rapidity criterion, the same radii the Heaviside traversal uses.
+        pc.domain_.setVelocityMac(pc.velocityMac());
+        pc.domain_.syncGrav(pc.keys, pc.x, pc.y, pc.z, pc.hZero, std::get<mSlot>(t), pc.w,
+                            cstone::get<ConservedFields>(pc),
+                            std::tie(pc.scratch0, pc.scratch1, pc.scratchTh, pc.scratchSfc));
+    } else {
+        pc.domain_.syncGrav(pc.keys, pc.x, pc.y, pc.z, pc.hZero, std::get<mSlot>(t),
+                            cstone::get<ConservedFields>(pc),
+                            std::tie(pc.scratch0, pc.scratch1, pc.scratchTh, pc.scratchSfc));
+    }
 
     // Dependent fields hold the BH force output; resize to the post-sync extent
     // so consumer kernels index over [0, nWithHalos). Halo-region content is

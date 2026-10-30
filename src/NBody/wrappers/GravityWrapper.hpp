@@ -112,6 +112,7 @@ public:
 
     util::array<uint64_t, 5> readStats() const { return {0, 0, 0, 0, 0}; }
     uint64_t retriedGroups() const { return 0; }
+    uint64_t remoteEvents() const { return 0; }
 
     const MType* multipoles() const { return multipoles_.data(); }
 
@@ -181,6 +182,8 @@ public:
     //! @brief return numP2P, maxP2P, numM2P, maxM2P, maxStack stats
     util::array<uint64_t, 5> readStats() const { return mHolder_.readStats(); }
     uint64_t retriedGroups() const { return mHolder_.retriedGroups(); }
+    //! @brief remote leaves applied as multipoles although they failed the MAC (diagnostic)
+    uint64_t remoteEvents() const { return mHolder_.remoteApproximations(); }
 
     const MType* deviceMultipoles() const { return mHolder_.deviceMultipoles(); }
 
@@ -229,20 +232,20 @@ public:
         d.egrav = 0;
         const auto s   = mHolder_.readStats();
         stats_         = {s[0], s[1], s[2], s[3], s[4]};
-        remoteFailed_  = s[5];
+        remoteRetried_ = s[5];
     }
 
     //! @brief return numP2P, maxP2P, numM2P, maxM2P, maxStack stats of the last traverse
     util::array<uint64_t, 5> readStats() const { return stats_; }
-    //! @brief remote leaves applied as multipoles although they failed the scaled MAC
-    uint64_t remoteMacFailures() const { return remoteFailed_; }
+    //! @brief group traversals split and repeated because a remote leaf failed the MAC
+    uint64_t remoteEvents() const { return remoteRetried_; }
     uint64_t retriedGroups() const { return mHolder_.retriedGroups(); }
 
 private:
     ryoanji::HeavisideHolder<Tc, Th, Tm, Ta, Tf, KeyType> mHolder_;
     Params                                                params_;
     util::array<uint64_t, 5>                              stats_{0, 0, 0, 0, 0};
-    uint64_t                                              remoteFailed_ = 0;
+    uint64_t                                              remoteRetried_ = 0;
 };
 
 // CPU builds have no Heaviside traversal; the solver rejects MultipoleOrder::Heaviside there.
@@ -262,7 +265,7 @@ public:
     void upsweep(const DataType&, const DomainType&) { unsupported(); }
     void traverse(cstone::GroupView, DataType&, const DomainType&) { unsupported(); }
     util::array<uint64_t, 5> readStats() const { return {0, 0, 0, 0, 0}; }
-    uint64_t remoteMacFailures() const { return 0; }
+    uint64_t remoteEvents() const { return 0; }
     uint64_t retriedGroups() const { return 0; }
 };
 

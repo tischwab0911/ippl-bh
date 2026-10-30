@@ -209,7 +209,7 @@ public:
     Container& pc_;
     Params     params_;
     Holders    mHolder_;
-    unsigned long long remoteMacFailures_ = 0;
+    unsigned long long remoteEvents_ = 0;  // this rank, since the last takeRemoteEvents
 };
 
 template <class P, unsigned Dim>
@@ -231,11 +231,37 @@ NBodySolver<P, Dim>::NBodySolver(Container& pc, Params params) {
 template <class P, unsigned Dim>
 void NBodySolver<P, Dim>::setHeavisideParams(const ryoanji::HeavisideParams<typename P::Tf>& params) {
     impl_->params_.heaviside = params;
+    // The next syncGravBH (Heaviside field lists) gives cstone the same criterion, so the locally
+    // essential tree, the halos and the traversal use one MAC radius per cell.
+    using Tc = typename Container::DomainT::RealType;
+    const auto vm = ryoanji::velocityMac(params.frame, params.thetaV, params.velocityMoments);
+    cstone::VelocityMac<Tc> p;
+    p.gammaRef          = Tc(vm.gammaRef);
+    p.betaRef           = Tc(vm.betaRef);
+    p.wRef              = Tc(vm.wRef);
+    p.thetaV            = Tc(vm.thetaV);
+    p.rapidityCriterion = vm.rapidityCriterion;
+    p.active            = true;
+    impl_->pc_.setVelocityMac(p);
 }
 
 template <class P, unsigned Dim>
-unsigned long long NBodySolver<P, Dim>::remoteMacFailures() const {
-    return impl_->remoteMacFailures_;
+unsigned long long NBodySolver<P, Dim>::takeRemoteEvents() {
+    unsigned long long global = 0;
+    MPI_Allreduce(&impl_->remoteEvents_, &global, 1, MPI_UNSIGNED_LONG_LONG, MPI_SUM, impl_->pc_.comm());
+    impl_->remoteEvents_ = 0;
+    return global;
+}
+
+template <class P, unsigned Dim>
+typename NBodySolver<P, Dim>::LetStatistics NBodySolver<P, Dim>::letStatistics() const {
+    const auto& pc     = impl_->pc_;
+    const auto  cells  = pc.domain().velocityMacStats();
+    unsigned long long local[3] = {
+        static_cast<unsigned long long>(pc.nWithHalos() - pc.getLocalNum()), cells[0], cells[1]};
+    unsigned long long global[3] = {0, 0, 0};
+    MPI_Allreduce(local, global, 3, MPI_UNSIGNED_LONG_LONG, MPI_SUM, pc.comm());
+    return {global[0], global[1], global[2]};
 }
 
 template <class P, unsigned Dim>
@@ -310,11 +336,7 @@ void NBodySolver<P, Dim>::runSolver(bool warmup) {
         },
         s.mHolder_);
 
-    if (auto* heaviside = std::get_if<typename Impl::HolderH>(&s.mHolder_)) {
-        unsigned long long local = heaviside->remoteMacFailures(), global = 0;
-        MPI_Allreduce(&local, &global, 1, MPI_UNSIGNED_LONG_LONG, MPI_SUM, pc.comm());
-        s.remoteMacFailures_ = global;
-    }
+    s.remoteEvents_ += std::visit([](auto& holder) { return holder.remoteEvents(); }, s.mHolder_);
 
     // sphexa gravity_wrapper guard: ryoanji signals traversal-stack exhaustion by
     // setting maxP2P = 0xFFFFFFFF. Without this check the kernel returns with

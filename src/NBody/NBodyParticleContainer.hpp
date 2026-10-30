@@ -204,9 +204,9 @@ public:
     //   Payload   : aux0 aux64          (application-defined per-particle data that a
     //                                    driver carries through redistribution by listing
     //                                    them as conserved; see fields::AuxConserved)
-    //   Heaviside : Cx Cy (dependent, second field channel), w (conserved, source rapidity
-    //               relative to the frame); used with MultipoleOrder::Heaviside, see
-    //               fields::RelConserved / fields::RelDependent
+    //   Heaviside : Cx Cy (dependent, second field channel), w (source rapidity relative to
+    //               the frame, a structural argument of syncGrav with fields::RelDependent);
+    //               used with MultipoleOrder::Heaviside
     static constexpr std::array<std::string_view, 18> fieldNames{
         "Rx", "Ry", "Rz", "h", "charge",
         "Px", "Py", "Pz", "ID",
@@ -422,6 +422,11 @@ public:
     // identical on all ranks. Its aspect ratio sets the mixed-dimension SFC key bits.
     void setBox(const cstone::Box<Tc>& box) { domain_.setBox(box); }
 
+    // Velocity-aware MAC (frame and rapidity criterion) of the next syncGravBH with the Heaviside
+    // field lists. Kept here, not in the domain, so it survives resetDomain.
+    void setVelocityMac(const cstone::VelocityMac<Tc>& p) { velocityMac_ = p; }
+    const cstone::VelocityMac<Tc>& velocityMac() const { return velocityMac_; }
+
     // MPI communicator the domain and all module-level collectives run on.
     // Defaults to MPI_COMM_WORLD; pass a sub-communicator to the ctor to confine
     // the module to a subset of ranks.
@@ -512,6 +517,7 @@ private:
     }
 
     DomainT                       domain_;
+    cstone::VelocityMac<Tc>       velocityMac_;
     MPI_Comm                      comm_;
     FieldVector<KeyType>          keys;
     FieldVector<Tc>               scratch0, scratch1;

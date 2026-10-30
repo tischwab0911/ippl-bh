@@ -82,10 +82,23 @@ public:
     // MultipoleOrder::Heaviside: frame and rapidity MAC of the next runSolver.
     void setHeavisideParams(const ryoanji::HeavisideParams<typename P::Tf>& params);
 
-    // MultipoleOrder::Heaviside: remote leaves of the last solve that were applied as multipoles
-    // although they failed the rapidity-scaled MAC (cstone's LET uses the unscaled MAC; 0 on one
-    // rank). Summed over ranks.
-    unsigned long long remoteMacFailures() const;
+    // Remote leaves (no particles in the locally essential tree) that failed the MAC for a target
+    // group in the runSolver calls since the last call, summed over ranks. cstone makes every cell that fails the MAC for one
+    // of the rank's focus leaves a halo, so this only happens for groups spanning several leaves.
+    // MultipoleOrder::Heaviside: such group traversals were split and repeated (exact, 0 on one rank).
+    // Other orders: the leaves were applied as multipoles (diagnostic). Collective (all-reduce),
+    // also on ranks whose runSolver returned early.
+    unsigned long long takeRemoteEvents();
+
+    // Locally essential tree of the last sync, summed over ranks: halo particles and, with the
+    // velocity-aware MAC (Heaviside), cells that are always opened and cells with a kappa-scaled radius.
+    // Collective (all-reduce).
+    struct LetStatistics {
+        unsigned long long haloParticles   = 0;
+        unsigned long long alwaysOpenCells = 0;
+        unsigned long long scaledCells     = 0;
+    };
+    LetStatistics letStatistics() const;
 
 private:
     class Impl;
