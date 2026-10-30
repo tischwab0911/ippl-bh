@@ -74,6 +74,18 @@
       }
     },
     {
+      "name": "alps-gh200-nbody-develop",
+      "displayName": "Alps-GH200-NBody-develop",
+      "description": "alps-gh200 with the NBody module, built from the develop branch of ryoanji",
+      "inherits": [
+        "alps-gh200"
+      ],
+      "cacheVariables": {
+        "IPPL_ENABLE_NBODY": "ON",
+        "IPPL_RYOANJI_GIT_TAG": "develop"
+      }
+    },
+    {
       "name": "alps-mi300",
       "displayName": "Alps-mi300-defaults",
       "description": "Enables building test in debug mode",
